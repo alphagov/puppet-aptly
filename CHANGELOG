@@ -1,2 +1,4 @@
 2014-03-31 Release 0.0.1
 - First release
+- Basic install and config
+- aptly::mirror for creating mirror entries
