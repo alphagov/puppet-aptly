@@ -15,7 +15,16 @@ Include with default parameters:
 include aptly
 ```
 
-See the class documentation for advanced usage.
+Create a mirror for manual update/snapshot/publish:
+```
+aptly::mirror { 'puppetlabs':
+  location => 'http://apt.puppetlabs.com/',
+  repos    => ['main', 'dependencies'],
+  key      => '4BD6EC30',
+}
+```
+
+See the class and defined type documentation for advanced usage.
 
 ## License
 
