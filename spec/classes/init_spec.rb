@@ -38,4 +38,22 @@ EOS
       }
     end
   end
+
+  describe '#repo' do
+    context 'not a bool' do
+      let(:params) {{
+        :repo => 'this is a string',
+      }}
+
+      it { expect { should }.to raise_error(Puppet::Error, /is not a boolean/) }
+    end
+
+    context 'false' do
+      let(:params) {{
+        :repo => false,
+      }}
+
+      it { should_not contain_apt__source('aptly') }
+    end
+  end
 end
