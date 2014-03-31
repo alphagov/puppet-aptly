@@ -8,3 +8,4 @@ description   'UNKNOWN'
 project_page  'UNKNOWN'
 
 dependency 'puppetlabs/stdlib', '>= 3.0.0'
+dependency 'puppetlabs/apt', '>= 1.0.0'

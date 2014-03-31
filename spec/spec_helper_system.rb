@@ -12,5 +12,6 @@ RSpec.configure do |c|
     puppet_install
     puppet_module_install(:source => proj_root, :module_name => 'aptly')
     shell('puppet module install puppetlabs-stdlib')
+    shell('puppet module install puppetlabs-apt')
   end
 end
