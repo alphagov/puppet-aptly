@@ -2,7 +2,7 @@
 #
 # Create a repository using `aptly create`. It will not snapshot, or update the
 # repository for you, because it will take a long time and it doesn't make sense
-# to schedule these actions frequently in Puppet. 
+# to schedule these actions frequently in Puppet.
 #
 # === Parameters
 #
