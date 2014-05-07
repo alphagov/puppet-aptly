@@ -1,9 +1,15 @@
 # == Define: aptly::repo
 #
+# Create a repository using `aptly create`. It will not snapshot, or update the
+# repository for you, because it will take a long time and it doesn't make sense
+# to schedule these actions frequently in Puppet.
+#
+# NB: 
+#
 # === Parameters
 #
 # [*component*]
-#   Name of the component.
+#   Specify which component to put the package in. Default to 'main'
 define aptly::repo(
   $component = 'main'
 ){
