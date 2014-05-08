@@ -22,7 +22,7 @@ describe 'aptly' do
       it { expect { should }.to raise_error(Puppet::Error, /is not a Hash/) }
     end
 
-    context 'rootDir and architectures' do
+    context 'rootDir and architectures in non-alphabetical order' do
       let(:params) {{
         :config => {
           'rootDir'       => '/srv/aptly',
@@ -30,12 +30,12 @@ describe 'aptly' do
         },
       }}
 
-      it {
+      it 'should render JSON file with contents sorted by key' do
         should contain_file('/etc/aptly.conf').with_content(<<EOS
-{"rootDir":"/srv/aptly","architectures":["i386","amd64"]}
+{"architectures":["i386","amd64"],"rootDir":"/srv/aptly"}
 EOS
         )
-      }
+      end
     end
   end
 
