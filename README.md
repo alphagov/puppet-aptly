@@ -24,6 +24,13 @@ aptly::mirror { 'puppetlabs':
 }
 ```
 
+Create an aptly repository to host local packages:
+```puppet
+aptly::repo{ 'mylocalrepo':
+  component => 'main'
+}
+```
+
 See the class and defined type documentation for advanced usage.
 
 ## License
