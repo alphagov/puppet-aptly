@@ -15,7 +15,7 @@ define aptly::repo(
   $aptly_cmd = '/usr/bin/aptly repo'
 
   exec{ "aptly_repo_create-${title}":
-    command => "${aptly_cmd} create ${title} -component=\"${component}\"",
+    command => "${aptly_cmd} create -component=\"${component}\" ${title}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => 'root',
     require => [

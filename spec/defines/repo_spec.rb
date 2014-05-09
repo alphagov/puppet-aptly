@@ -6,7 +6,7 @@ describe 'aptly::repo' do
   describe 'param defaults' do
     it {
         should contain_exec('aptly_repo_create-example').with({
-          :command  => /aptly repo create example -component="main"$/,
+          :command  => /aptly repo create -component="main" example$/,
           :unless   => /aptly repo show example >\/dev\/null$/,
           :user     => 'root',
           :require  => [
@@ -23,7 +23,7 @@ describe 'aptly::repo' do
 
     it {
         should contain_exec('aptly_repo_create-example').with({
-          :command  => /aptly repo create example -component="third-party"$/,
+          :command  => /aptly repo create -component="third-party" example$/,
           :unless   => /aptly repo show example >\/dev\/null$/,
           :user     => 'root',
           :require  => [
