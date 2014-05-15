@@ -13,6 +13,22 @@ describe 'aptly' do
     it { should contain_file('/etc/aptly.conf').with_content("{}\n") }
   end
 
+  describe '#package_ensure' do
+    context 'present (default)' do
+      let(:params) {{ }}
+
+      it { should contain_package('aptly').with_ensure('present') }
+    end
+
+    context '1.2.3' do
+      let(:params) {{
+        :package_ensure => '1.2.3',
+      }}
+
+      it { should contain_package('aptly').with_ensure('1.2.3') }
+    end
+  end
+
   describe '#config' do
     context 'not a hash' do
       let(:params) {{

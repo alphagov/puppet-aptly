@@ -4,6 +4,10 @@
 #
 # === Parameters
 #
+# [*package_ensure*]
+#   Ensure parameter to pass to the package resource.
+#   Default: present
+#
 # [*config*]
 #   Hash of configuration options for `/etc/aptly.conf`.
 #   See http://www.aptly.info/#configuration
@@ -15,6 +19,7 @@
 #   Default: true
 #
 class aptly (
+  $package_ensure = present,
   $config = {},
   $repo = true,
 ) {
@@ -35,7 +40,7 @@ class aptly (
   }
 
   package { 'aptly':
-    ensure  => present,
+    ensure  => $package_ensure,
   }
 
   file { '/etc/aptly.conf':
