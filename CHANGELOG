@@ -1,5 +1,7 @@
-2014-05-08 CURRENT
+2014-05-15 Release 0.1.0
 - Remove support for Ruby 1.8
+- Add `package_ensure` param so that you can specify a version
+- aptly::repo for creating local repos
 
 2014-03-31 Release 0.0.1
 - First release
