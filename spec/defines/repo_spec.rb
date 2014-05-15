@@ -6,7 +6,7 @@ describe 'aptly::repo' do
   describe 'param defaults' do
     it {
         should contain_exec('aptly_repo_create-example').with({
-          :command  => /aptly repo create -component="main" example$/,
+          :command  => /aptly repo create  example$/,
           :unless   => /aptly repo show example >\/dev\/null$/,
           :user     => 'root',
           :require  => [

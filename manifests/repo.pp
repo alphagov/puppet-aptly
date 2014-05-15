@@ -7,15 +7,25 @@
 # === Parameters
 #
 # [*component*]
-#   Specify which component to put the package in. Default to 'main'
+#   Specify which component to put the package in. This option will only works
+#   for aptly version >= 0.5.0.
 #
 define aptly::repo(
-  $component = 'main'
+  $component = '',
 ){
+  validate_string($component)
+
   $aptly_cmd = '/usr/bin/aptly repo'
 
+  if empty($component) {
+    $component_arg = ''
+  } else{
+    $component_arg = "-component=\"${component}\""
+  }
+
+
   exec{ "aptly_repo_create-${title}":
-    command => "${aptly_cmd} create -component=\"${component}\" ${title}",
+    command => "${aptly_cmd} create ${component_arg} ${title}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => 'root',
     require => [
