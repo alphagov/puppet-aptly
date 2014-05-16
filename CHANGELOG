@@ -1,3 +1,7 @@
+2014-05-16 Release 0.1.1
+- Transfer to gds-operations and release to Forge.
+- No functional changes.
+
 2014-05-15 Release 0.1.0
 - Remove support for Ruby 1.8
 - Add `package_ensure` param so that you can specify a version
