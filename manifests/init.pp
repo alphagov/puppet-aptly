@@ -22,6 +22,7 @@ class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
+  $key_server = 'keys.gnupg.net',
 ) {
 
   validate_hash($config)
@@ -32,6 +33,7 @@ class aptly (
       location    => 'http://repo.aptly.info',
       release     => 'squeeze',
       repos       => 'main',
+      key_server  => $key_server,
       key         => '2A194991',
       include_src => false,
     }
