@@ -29,6 +29,26 @@ describe 'aptly' do
     end
   end
 
+  describe '#key_server' do
+    context 'default key_server' do
+      let(:param){{}}
+
+      it{ should contain_apt__source('aptly').with(
+        'key_server' => 'undef',
+      )}
+    end
+
+    context 'custom key_server' do
+      let(:params){{
+        :key_server => 'somekeyserver.com',
+      }}
+
+      it{ should contain_apt__source('aptly').with(
+        'key_server' => 'somekeyserver.com',
+      )}
+    end
+  end
+
   describe '#config' do
     context 'not a hash' do
       let(:params) {{

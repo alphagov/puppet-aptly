@@ -18,15 +18,20 @@
 #   You might want to disable this if/when you've mirrored that yourself.
 #   Default: true
 #
+# [*key_server*]
+#   Location of the GPG key.
+#   Default: undef
+#
 class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
-  $key_server = 'keys.gnupg.net',
+  $key_server = 'undef',
 ) {
 
   validate_hash($config)
   validate_bool($repo)
+  validate_string($key_server)
 
   if $repo {
     apt::source { 'aptly':
