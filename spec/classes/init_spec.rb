@@ -30,14 +30,6 @@ describe 'aptly' do
   end
 
   describe '#key_server' do
-    context 'default key_server' do
-      let(:params){{}}
-
-      it{ should contain_apt__source('aptly').with(
-        'key_server' => 'undef',
-      )}
-    end
-
     context 'custom key_server' do
       let(:params){{
         :key_server => 'somekeyserver.com',

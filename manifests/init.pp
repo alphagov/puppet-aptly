@@ -26,7 +26,7 @@ class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
-  $key_server = 'undef',
+  $key_server = undef,
 ) {
 
   validate_hash($config)
