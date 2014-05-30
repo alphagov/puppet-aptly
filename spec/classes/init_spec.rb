@@ -30,6 +30,12 @@ describe 'aptly' do
   end
 
   describe '#key_server' do
+    context "context" do
+      let(:params){{}}
+      it{ should contain_apt__source('aptly').with(
+        'key_server' => 'keyserver.ubuntu.com',
+      )}
+    end
     context 'custom key_server' do
       let(:params){{
         :key_server => 'somekeyserver.com',
