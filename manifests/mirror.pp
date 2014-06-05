@@ -31,10 +31,13 @@
 define aptly::mirror (
   $location,
   $key,
+  $keyserver = 'keyserver.ubuntu.com',
   $release = $::lsbdistcodename,
   $repos = [],
+  $user = 'root',
 ) {
   validate_array($repos)
+  validate_string($keyserver, $user)
 
   $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
   $aptly_cmd = '/usr/bin/aptly mirror'
@@ -49,9 +52,9 @@ define aptly::mirror (
 
   if !defined(Exec[$exec_key_title]) {
     exec { $exec_key_title:
-      command => "${gpg_cmd} --keyserver 'keyserver.ubuntu.com' --recv-keys '${key}'",
+      command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key}'",
       unless  => "${gpg_cmd} --list-keys '${key}'",
-      user    => 'root',
+      user    => $user,
     }
   }
 
