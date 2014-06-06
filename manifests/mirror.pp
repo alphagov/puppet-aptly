@@ -61,7 +61,7 @@ define aptly::mirror (
   exec { "aptly_mirror_create-${title}":
     command => "${aptly_cmd} create ${title} ${location} ${release}${components_arg}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
-    user    => 'root',
+    user    => $user,
     require => [
       Class['aptly'],
       Exec[$exec_key_title],
