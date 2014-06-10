@@ -19,6 +19,10 @@
 #   Import the GPG key into the `trustedkeys` keyring so that aptly can
 #   verify the mirror's manifests.
 #
+# [*keyserver*]
+#   The keyserver to use when download the key
+#    Default: 'keyserver.ubuntu.com'
+#
 # [*release*]
 #   Distribution to mirror for.
 #   Default: `$::lsbdistcodename`
@@ -27,6 +31,10 @@
 #   Components to mirror. If an empty array then aptly will default to
 #   mirroring all components.
 #   Default: []
+#
+# [*user*]
+#   The user to use when downloading keys and creating mirror
+#   Default: 'root'
 #
 define aptly::mirror (
   $location,
