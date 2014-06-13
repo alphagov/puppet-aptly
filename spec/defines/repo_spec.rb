@@ -31,5 +31,23 @@ describe 'aptly::repo' do
           ],
       })
     }
+
+    context 'custom user' do
+      let(:params){{
+        :component => 'third-party',
+        :user => 'custom_user',
+      }}
+
+    it {
+        should contain_exec('aptly_repo_create-example').with({
+          :command  => /aptly repo create -component="third-party" example$/,
+          :unless   => /aptly repo show example >\/dev\/null$/,
+          :user     => 'custom_user',
+          :require  => [
+            'Class[Aptly]'
+          ],
+      })
+    }
+    end
   end
 end
