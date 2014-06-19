@@ -19,7 +19,8 @@
 #   Default: true
 #
 # [*key_server*]
-#   Location of the GPG key.
+#   Key server to use when `$repo` is true. Uses the default of
+#   `apt::source` if not specified.
 #   Default: undef
 #
 class aptly (
