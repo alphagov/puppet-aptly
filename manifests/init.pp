@@ -18,15 +18,21 @@
 #   You might want to disable this if/when you've mirrored that yourself.
 #   Default: true
 #
+# [*key_server*]
+#   Key server to use when `$repo` is true. Uses the default of
+#   `apt::source` if not specified.
+#   Default: undef
+#
 class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
-  $key_server = 'keys.gnupg.net',
+  $key_server = undef,
 ) {
 
   validate_hash($config)
   validate_bool($repo)
+  validate_string($key_server)
 
   if $repo {
     apt::source { 'aptly':
