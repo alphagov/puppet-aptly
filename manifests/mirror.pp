@@ -19,7 +19,7 @@
 #   Import the GPG key into the `trustedkeys` keyring so that aptly can
 #   verify the mirror's manifests.
 #
-# [*keyserver*]
+# [*key_server*]
 #   The keyserver to use when download the key
 #    Default: 'keyserver.ubuntu.com'
 #
@@ -32,20 +32,16 @@
 #   mirroring all components.
 #   Default: []
 #
-# [*user*]
-#   The user to use when downloading keys and creating mirror
-#   Default: 'root'
-#
 define aptly::mirror (
   $location,
   $key,
   $keyserver = 'keyserver.ubuntu.com',
   $release = $::lsbdistcodename,
   $repos = [],
-  $user = 'root',
 ) {
   validate_array($repos)
-  validate_string($keyserver, $user)
+  validate_string($keyserver)
+  include aptly
 
   $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
   $aptly_cmd = '/usr/bin/aptly mirror'
@@ -62,14 +58,14 @@ define aptly::mirror (
     exec { $exec_key_title:
       command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key}'",
       unless  => "${gpg_cmd} --list-keys '${key}'",
-      user    => $user,
+      user    => $::aptly::user,
     }
   }
 
   exec { "aptly_mirror_create-${title}":
     command => "${aptly_cmd} create ${title} ${location} ${release}${components_arg}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
-    user    => $user,
+    user    => $::aptly::user,
     require => [
       Class['aptly'],
       Exec[$exec_key_title],

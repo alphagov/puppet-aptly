@@ -3,6 +3,10 @@ require 'spec_helper'
 describe 'aptly::repo' do
   let(:title) { 'example' }
 
+  let(:facts){{
+    :lsbdistid => 'ubuntu',
+  }}
+
   describe 'param defaults' do
     it {
         should contain_exec('aptly_repo_create-example').with({
@@ -35,9 +39,9 @@ describe 'aptly::repo' do
     context 'custom user' do
       let(:params){{
         :component => 'third-party',
-        :user => 'custom_user',
       }}
 
+      let(:pre_condition)  { 'class { "aptly": user => "custom_user" }' }
     it {
         should contain_exec('aptly_repo_create-example').with({
           :command  => /aptly repo create -component="third-party" example$/,

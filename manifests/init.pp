@@ -18,15 +18,21 @@
 #   You might want to disable this if/when you've mirrored that yourself.
 #   Default: true
 #
+# [*user*]
+# The user to use when performing an aptly command
+# Default: 'root'
+#
 class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
   $key_server = 'keys.gnupg.net',
+  $user = 'root'
 ) {
 
   validate_hash($config)
   validate_bool($repo)
+  validate_string($user)
 
   if $repo {
     apt::source { 'aptly':
