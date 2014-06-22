@@ -29,6 +29,30 @@ describe 'aptly' do
     end
   end
 
+  describe '#key_server (with #repo default to true)' do
+    context "undef (default)" do
+      let(:params) {{ }}
+
+      it "should let apt::source decide the default (keyserver.ubuntu.com)" do
+        should contain_apt__source('aptly').with(
+          :key_server => 'keyserver.ubuntu.com',
+        )
+      end
+    end
+
+    context 'custom key_server' do
+      let(:params) {{
+        :key_server => 'somekeyserver.com',
+      }}
+
+      it "should override apt::source (somekeyserver.com)" do
+        should contain_apt__source('aptly').with(
+          :key_server => 'somekeyserver.com',
+        )
+      end
+    end
+  end
+
   describe '#config' do
     context 'not a hash' do
       let(:params) {{
