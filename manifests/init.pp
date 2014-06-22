@@ -31,8 +31,8 @@ class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
-  $user = 'root'
   $key_server = undef,
+  $user = 'root',
 ) {
 
   validate_hash($config)
