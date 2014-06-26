@@ -14,6 +14,7 @@ define aptly::repo(
   $component = '',
 ){
   validate_string($component)
+
   include aptly
 
   $aptly_cmd = '/usr/bin/aptly repo'
