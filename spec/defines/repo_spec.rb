@@ -37,11 +37,17 @@ describe 'aptly::repo' do
     }
 
     context 'custom user' do
+      let(:pre_condition)  { <<-EOS
+        class { 'aptly':
+          user => 'custom_user',
+        }
+        EOS
+      }
+
       let(:params){{
         :component => 'third-party',
       }}
 
-      let(:pre_condition)  { 'class { "aptly": user => "custom_user" }' }
       it {
           should contain_exec('aptly_repo_create-example').with({
             :command  => /aptly repo create -component="third-party" example$/,

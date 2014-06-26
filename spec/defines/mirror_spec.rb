@@ -48,12 +48,18 @@ describe 'aptly::mirror' do
 
   describe '#user' do
     context 'with custom user' do
+      let(:pre_condition)  { <<-EOS
+        class { 'aptly':
+          user => 'custom_user',
+        }
+        EOS
+      }
+
       let(:params){{
         :location => 'http://repo.example.com',
         :key      => 'ABC123',
       }}
 
-      let(:pre_condition)  { 'class { "aptly": user => "custom_user" }' }
       it {
         should contain_exec('aptly_mirror_key-ABC123').with({
           :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
