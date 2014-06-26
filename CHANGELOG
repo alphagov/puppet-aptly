@@ -1,3 +1,12 @@
+2014-06-26 Release 0.2.0
+- Add `user` param to parent class for the user that `aptly::mirror` and
+  `aptly::repo` commands are run as.
+- Add `key_server` param to parent class for the key server to use when
+  verifying aptly's own repo.
+- Add `key_server` param to `aptly::mirror` so that you can specify a
+  different hostname or protocol.
+- All defaults match the behaviour of previous versions.
+
 2014-05-16 Release 0.1.1
 - Transfer to gds-operations and release to Forge.
 - No functional changes.
