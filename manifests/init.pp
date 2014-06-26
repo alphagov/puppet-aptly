@@ -37,8 +37,8 @@ class aptly (
 
   validate_hash($config)
   validate_bool($repo)
-  validate_string($user)
   validate_string($key_server)
+  validate_string($user)
 
   if $repo {
     apt::source { 'aptly':

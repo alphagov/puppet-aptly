@@ -39,8 +39,8 @@ define aptly::mirror (
   $release = $::lsbdistcodename,
   $repos = [],
 ) {
-  validate_array($repos)
   validate_string($keyserver)
+  validate_array($repos)
 
   include aptly
 
