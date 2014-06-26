@@ -24,8 +24,8 @@
 #   Default: undef
 #
 # [*user*]
-# The user to use when performing an aptly command
-# Default: 'root'
+#   The user to use when performing an aptly command
+#   Default: 'root'
 #
 class aptly (
   $package_ensure = present,

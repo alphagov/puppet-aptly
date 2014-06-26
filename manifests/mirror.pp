@@ -21,7 +21,7 @@
 #
 # [*key_server*]
 #   The keyserver to use when download the key
-#    Default: 'keyserver.ubuntu.com'
+#   Default: 'keyserver.ubuntu.com'
 #
 # [*release*]
 #   Distribution to mirror for.
@@ -41,6 +41,7 @@ define aptly::mirror (
 ) {
   validate_array($repos)
   validate_string($keyserver)
+
   include aptly
 
   $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'

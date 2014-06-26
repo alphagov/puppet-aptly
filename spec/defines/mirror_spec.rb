@@ -54,7 +54,7 @@ describe 'aptly::mirror' do
       }}
 
       let(:pre_condition)  { 'class { "aptly": user => "custom_user" }' }
-      it { 
+      it {
         should contain_exec('aptly_mirror_key-ABC123').with({
           :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
           :unless  => / --list-keys 'ABC123'$/,
@@ -62,17 +62,17 @@ describe 'aptly::mirror' do
         })
       }
 
-    it {
-      should contain_exec('aptly_mirror_create-example').with({
-        :command => /aptly mirror create example http:\/\/repo\.example\.com precise$/,
-        :unless  => /aptly mirror show example >\/dev\/null$/,
-        :user    => 'custom_user',
-        :require => [
-          'Class[Aptly]',
-          'Exec[aptly_mirror_key-ABC123]'
-        ],
-      })
-    }
+      it {
+        should contain_exec('aptly_mirror_create-example').with({
+          :command => /aptly mirror create example http:\/\/repo\.example\.com precise$/,
+          :unless  => /aptly mirror show example >\/dev\/null$/,
+          :user    => 'custom_user',
+          :require => [
+            'Class[Aptly]',
+            'Exec[aptly_mirror_key-ABC123]'
+          ],
+        })
+      }
     end
   end
 
@@ -81,7 +81,7 @@ describe 'aptly::mirror' do
       let(:params){{
         :location   => 'http://repo.example.com',
         :key        => 'ABC123',
-        :keyserver  => 'hkp://repo.keyserver.com:80', 
+        :keyserver  => 'hkp://repo.keyserver.com:80',
       }}
 
       it{
