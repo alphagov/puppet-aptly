@@ -23,15 +23,21 @@
 #   `apt::source` if not specified.
 #   Default: undef
 #
+# [*user*]
+# The user to use when performing an aptly command
+# Default: 'root'
+#
 class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
   $key_server = undef,
+  $user = 'root',
 ) {
 
   validate_hash($config)
   validate_bool($repo)
+  validate_string($user)
   validate_string($key_server)
 
   if $repo {

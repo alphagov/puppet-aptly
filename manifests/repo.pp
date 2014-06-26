@@ -14,6 +14,7 @@ define aptly::repo(
   $component = '',
 ){
   validate_string($component)
+  include aptly
 
   $aptly_cmd = '/usr/bin/aptly repo'
 
@@ -27,7 +28,7 @@ define aptly::repo(
   exec{ "aptly_repo_create-${title}":
     command => "${aptly_cmd} create ${component_arg} ${title}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
-    user    => 'root',
+    user    => $::aptly::user,
     require => [
       Class['aptly'],
     ],
