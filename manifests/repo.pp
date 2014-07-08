@@ -10,8 +10,13 @@
 #   Specify which component to put the package in. This option will only works
 #   for aptly version >= 0.5.0.
 #
+# [*architectures*]
+#   Architectures to mirror. If an empty array then aptly will default to
+#   mirroring all architectures.
+#   Default: []
 define aptly::repo(
   $component = '',
+  $architectures = []
 ){
   validate_string($component)
 
@@ -25,9 +30,15 @@ define aptly::repo(
     $component_arg = "-component=\"${component}\""
   }
 
+  if empty($architectures) {
+    $arch_arg = ''
+  } else {
+    $archs_concat = join($architectures, ',')
+    $arch_arg = " -architectures=\"${archs_concat}\""
+  }
 
   exec{ "aptly_repo_create-${title}":
-    command => "${aptly_cmd} create ${component_arg} ${title}",
+    command => "${aptly_cmd}${arch_arg} create ${component_arg} ${title}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
     require => [
