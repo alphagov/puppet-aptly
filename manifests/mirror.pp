@@ -32,12 +32,17 @@
 #   mirroring all components.
 #   Default: []
 #
+# [*architectures*]
+#   Architectures to mirror. If an empty array then aptly will default to
+#   mirroring all architectures.
+#   Default: []
 define aptly::mirror (
   $location,
   $key,
   $keyserver = 'keyserver.ubuntu.com',
   $release = $::lsbdistcodename,
   $repos = [],
+  $architectures = [],
 ) {
   validate_string($keyserver)
   validate_array($repos)
@@ -55,6 +60,13 @@ define aptly::mirror (
     $components_arg = " ${components}"
   }
 
+  if empty($architectures) {
+    $arch_arg = ''
+  } else {
+    $archs_concat = join($architectures, ',')
+    $arch_arg = " -architectures=\"${archs_concat}\""
+  }
+
   if !defined(Exec[$exec_key_title]) {
     exec { $exec_key_title:
       command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key}'",
@@ -64,7 +76,7 @@ define aptly::mirror (
   }
 
   exec { "aptly_mirror_create-${title}":
-    command => "${aptly_cmd} create ${title} ${location} ${release}${components_arg}",
+    command => "${aptly_cmd}${arch_arg} create ${title} ${location} ${release}${components_arg}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
     require => [
