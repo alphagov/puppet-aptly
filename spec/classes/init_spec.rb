@@ -65,8 +65,8 @@ describe 'aptly' do
     context 'rootDir and architectures' do
       let(:params) {{
         :config => {
-          'rootDir'       => '/srv/aptly',
-          'architectures' => ['i386', 'amd64'],
+          'rootDir'             => '/srv/aptly',
+          'architectures'       => ['i386', 'amd64'],
         },
       }}
 
