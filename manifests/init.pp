@@ -35,7 +35,15 @@ class aptly (
   $user = 'root',
 ) {
 
-  validate_hash($config)
+  if is_hash($config) {
+    $config_content = inline_template("<%= @config.to_pson %>\n")
+  }
+  elsif is_string($config) {
+    $config_content = $config
+  } else {
+    fail('content needs to be a hash or a string')
+  }
+
   validate_bool($repo)
   validate_string($key_server)
   validate_string($user)
@@ -59,6 +67,6 @@ class aptly (
 
   file { '/etc/aptly.conf':
     ensure  => file,
-    content => inline_template("<%= @config.to_pson %>\n"),
+    content => $config_content,
   }
 }
