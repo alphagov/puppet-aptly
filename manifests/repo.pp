@@ -31,7 +31,8 @@ define aptly::repo(
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
     require => [
-      Class['::aptly'],
+      Package['aptly'],
+      File['/etc/aptly.conf'],
     ],
   }
 }
