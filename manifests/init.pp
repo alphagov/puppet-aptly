@@ -27,15 +27,29 @@
 #   The user to use when performing an aptly command
 #   Default: 'root'
 #
+# [*aptly_repos*]
+#   Hash of aptly repos which is passed to aptly::repo
+#   Default: {}
+#
+# [*aptly_mirrors*]
+#   Hash of aptly mirrors which is passed to aptly::mirror
+#   Default: {}
+#
 class aptly (
   $package_ensure = present,
   $config = {},
   $repo = true,
   $key_server = undef,
   $user = 'root',
+  ### START Hiera Lookups ###
+  $aptly_repos = {},
+  $aptly_mirrors = {},
+  ### END Hiera Lookups ###
 ) {
 
   validate_hash($config)
+  validate_hash($aptly_repos)
+  validate_hash($aptly_mirrors)
   validate_bool($repo)
   validate_string($key_server)
   validate_string($user)
@@ -61,4 +75,15 @@ class aptly (
     ensure  => file,
     content => inline_template("<%= @config.to_pson %>\n"),
   }
+
+  if $config['rootDir'] {
+    $root_dir = $config['rootDir']
+    file { [ $root_dir, "${root_dir}/public" ]:
+      ensure => directory
+    }
+  }
+
+  # Hiera support starts here
+  create_resources('::aptly::repo', $aptly_repos)
+  create_resources('::aptly::mirror', $aptly_mirrors)
 }
