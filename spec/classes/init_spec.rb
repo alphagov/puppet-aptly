@@ -62,7 +62,7 @@ describe 'aptly' do
       it { expect { should }.to raise_error(Puppet::Error, /is not a Hash/) }
     end
 
-    context 'rootDir and architectures' do
+    context 'string and string array values' do
       let(:params) {{
         :config => {
           'rootDir'       => '/srv/aptly',
@@ -73,6 +73,22 @@ describe 'aptly' do
       it {
         should contain_file('/etc/aptly.conf').with_content(<<EOS
 {"rootDir":"/srv/aptly","architectures":["i386","amd64"]}
+EOS
+        )
+      }
+    end
+
+    context 'boolean and integer values' do
+      let(:params) {{
+        :config                    => {
+          'downloadSourcePackages' => false,
+          'downloadConcurrency'    => 8,
+        },
+      }}
+
+      it {
+        should contain_file('/etc/aptly.conf').with_content(<<EOS
+{"downloadSourcePackages":false,"downloadConcurrency":8}
 EOS
         )
       }
