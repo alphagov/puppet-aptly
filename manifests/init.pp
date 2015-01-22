@@ -59,6 +59,6 @@ class aptly (
 
   file { '/etc/aptly.conf':
     ensure  => file,
-    content => inline_template("<%= @config.to_json %>\n"),
+    content => inline_template("<%= require 'json'; @config.to_json %>\n"),
   }
 }
