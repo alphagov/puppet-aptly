@@ -30,5 +30,8 @@ define aptly::repo(
     command => "${aptly_cmd} create ${component_arg} ${title}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
+    require => [
+      Class['aptly'],
+    ],
   }
 }

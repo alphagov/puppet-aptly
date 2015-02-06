@@ -41,10 +41,8 @@ class aptly (
   $repo = true,
   $key_server = undef,
   $user = 'root',
-  ### START Hiera Lookups ###
   $aptly_repos = {},
   $aptly_mirrors = {},
-  ### END Hiera Lookups ###
 ) {
 
   validate_hash($config)
@@ -76,14 +74,7 @@ class aptly (
     content => inline_template("<%= @config.to_pson %>\n"),
   }
 
-  if $config['rootDir'] {
-    $root_dir = $config['rootDir']
-    file { [ $root_dir, "${root_dir}/public" ]:
-      ensure => directory
-    }
-  }
-
-  # Hiera support starts here
+  # Hiera support
   create_resources('::aptly::repo', $aptly_repos)
   create_resources('::aptly::mirror', $aptly_mirrors)
 }
