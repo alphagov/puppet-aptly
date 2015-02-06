@@ -68,6 +68,7 @@ define aptly::mirror (
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
     require => [
+      Class['aptly'],
       Exec[$exec_key_title],
     ],
   }
