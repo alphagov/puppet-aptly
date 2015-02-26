@@ -59,7 +59,9 @@ describe 'aptly' do
         :config => 'this is a string',
       }}
 
-      it { expect { should }.to raise_error(Puppet::Error, /is not a Hash/) }
+      it {
+        should raise_error(Puppet::Error, /is not a Hash/)
+      }
     end
 
     context 'rootDir and architectures' do
@@ -85,7 +87,9 @@ EOS
         :repo => 'this is a string',
       }}
 
-      it { expect { should }.to raise_error(Puppet::Error, /is not a boolean/) }
+      it {
+        should raise_error(Puppet::Error, /is not a boolean/)
+      }
     end
 
     context 'false' do
