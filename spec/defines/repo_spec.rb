@@ -13,9 +13,7 @@ describe 'aptly::repo' do
           :command  => /aptly repo create  example$/,
           :unless   => /aptly repo show example >\/dev\/null$/,
           :user     => 'root',
-          :require  => [
-            'Class[Aptly]'
-          ],
+          :require  => 'Class[Aptly]',
       })
     }
   end
@@ -30,9 +28,7 @@ describe 'aptly::repo' do
           :command  => /aptly repo create -component="third-party" example$/,
           :unless   => /aptly repo show example >\/dev\/null$/,
           :user     => 'root',
-          :require  => [
-            'Class[Aptly]'
-          ],
+          :require  => 'Class[Aptly]',
       })
     }
 
@@ -53,9 +49,7 @@ describe 'aptly::repo' do
             :command  => /aptly repo create -component="third-party" example$/,
             :unless   => /aptly repo show example >\/dev\/null$/,
             :user     => 'custom_user',
-            :require  => [
-              'Class[Aptly]'
-            ],
+            :require  => 'Class[Aptly]',
         })
       }
     end
