@@ -108,7 +108,9 @@ describe 'aptly::mirror' do
         :repos    => 'this is a string',
       }}
 
-      it { expect { should }.to raise_error(Puppet::Error, /is not an Array/) }
+      it {
+        should raise_error(Puppet::Error, /is not an Array/)
+      }
     end
 
     context 'single item' do
