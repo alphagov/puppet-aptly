@@ -42,7 +42,7 @@ define aptly::mirror (
   validate_string($keyserver)
   validate_array($repos)
 
-  include aptly
+  include ::aptly
 
   $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
   $aptly_cmd = '/usr/bin/aptly mirror'
@@ -68,7 +68,7 @@ define aptly::mirror (
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
     require => [
-      Class['aptly'],
+      Class['::aptly'],
       Exec[$exec_key_title],
     ],
   }
