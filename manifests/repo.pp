@@ -15,7 +15,7 @@ define aptly::repo(
 ){
   validate_string($component)
 
-  include aptly
+  include ::aptly
 
   $aptly_cmd = '/usr/bin/aptly repo'
 
@@ -31,7 +31,7 @@ define aptly::repo(
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
     require => [
-      Class['aptly'],
+      Class['::aptly'],
     ],
   }
 }
