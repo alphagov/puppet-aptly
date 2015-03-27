@@ -27,7 +27,7 @@ describe 'aptly::mirror' do
         :unless  => /aptly mirror show example >\/dev\/null$/,
         :user    => 'root',
         :require => [
-          'Class[Aptly]',
+          'Package[aptly]',
           'Exec[aptly_mirror_key-ABC123]'
         ],
       })
@@ -74,7 +74,7 @@ describe 'aptly::mirror' do
           :unless  => /aptly mirror show example >\/dev\/null$/,
           :user    => 'custom_user',
           :require => [
-            'Class[Aptly]',
+            'Package[aptly]',
             'Exec[aptly_mirror_key-ABC123]'
           ],
         })
