@@ -1,0 +1,11 @@
+description "Aptly API Service"
+
+start on started mountall
+stop on shutdown
+
+console <%= @log %>
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+exec /usr/bin/aptly api serve -listen=<%= @listen %>
