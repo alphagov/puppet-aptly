@@ -1,3 +1,10 @@
+2015-04-23 Release 0.3.0
+- Add an `aptly::api` class for configuring aptly's API service.
+- Add support for specifying repos and mirrors in hieradata.
+- Convert Modulefile to metadata.json
+- Bugfix: use absolute references to `::aptly` class to prevent a
+  dependency cycle.
+
 2014-06-26 Release 0.2.0
 - Add `user` param to parent class for the user that `aptly::mirror` and
   `aptly::repo` commands are run as.
