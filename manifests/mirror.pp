@@ -19,7 +19,7 @@
 #   Import the GPG key into the `trustedkeys` keyring so that aptly can
 #   verify the mirror's manifests.
 #
-# [*key_server*]
+# [*keyserver*]
 #   The keyserver to use when download the key
 #   Default: 'keyserver.ubuntu.com'
 #
