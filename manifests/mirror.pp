@@ -46,7 +46,6 @@ define aptly::mirror (
 
   $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
   $aptly_cmd = '/usr/bin/aptly mirror'
-  $exec_key_title = "aptly_mirror_key-${key}"
 
   if empty($repos) {
     $components_arg = ''
@@ -55,12 +54,17 @@ define aptly::mirror (
     $components_arg = " ${components}"
   }
 
-  if !defined(Exec[$exec_key_title]) {
-    exec { $exec_key_title:
-      command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key}'",
-      unless  => "${gpg_cmd} --list-keys '${key}'",
-      user    => $::aptly::user,
-    }
+  if is_array($key) {
+    $key_string = join($key, "' '")
+  } else {
+    $key_string = $key
+  }
+
+  exec { "aptly_mirror_gpg-${title}":
+    path    => '/bin:/usr/bin',
+    command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key_string}'",
+    unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
+    user    => $::aptly::user,
   }
 
   exec { "aptly_mirror_create-${title}":
@@ -70,7 +74,7 @@ define aptly::mirror (
     require => [
       Package['aptly'],
       File['/etc/aptly.conf'],
-      Exec[$exec_key_title],
+      Exec["aptly_mirror_gpg-${title}"],
     ],
   }
 }
