@@ -14,9 +14,9 @@ describe 'aptly::mirror' do
     }}
 
     it {
-      should contain_exec('aptly_mirror_key-ABC123').with({
+      should contain_exec('aptly_mirror_gpg-example').with({
         :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
-        :unless  => / --list-keys 'ABC123'$/,
+        :unless  => /^echo 'ABC123' |/,
         :user    => 'root',
       })
     }
@@ -29,7 +29,7 @@ describe 'aptly::mirror' do
         :require => [
           'Package[aptly]',
           'File[/etc/aptly.conf]',
-          'Exec[aptly_mirror_key-ABC123]'
+          'Exec[aptly_mirror_gpg-example]'
         ],
       })
     }
@@ -43,7 +43,7 @@ describe 'aptly::mirror' do
         EOS
       }
 
-      it { should contain_exec('aptly_mirror_key-ABC123') }
+      it { should contain_exec('aptly_mirror_gpg-example-lucid') }
     end
   end
 
@@ -62,9 +62,9 @@ describe 'aptly::mirror' do
       }}
 
       it {
-        should contain_exec('aptly_mirror_key-ABC123').with({
+        should contain_exec('aptly_mirror_gpg-example').with({
           :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
-          :unless  => / --list-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
           :user    => 'custom_user',
         })
       }
@@ -77,7 +77,7 @@ describe 'aptly::mirror' do
           :require => [
             'Package[aptly]',
             'File[/etc/aptly.conf]',
-            'Exec[aptly_mirror_key-ABC123]'
+            'Exec[aptly_mirror_gpg-example]'
           ],
         })
       }
@@ -93,9 +93,26 @@ describe 'aptly::mirror' do
       }}
 
       it{
-        should contain_exec('aptly_mirror_key-ABC123').with({
+        should contain_exec('aptly_mirror_gpg-example').with({
           :command => / --keyserver 'hkp:\/\/repo.keyserver.com:80' --recv-keys 'ABC123'$/,
-          :unless  => / --list-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
+          :user    => 'root',
+        })
+      }
+    end
+  end
+
+  describe '#multikey' do
+    context 'with three keys' do
+      let(:params){{
+        :location   => 'http://repo.example.com',
+        :key        => [ 'ABC123', 'DEF456', 'GHI789' ],
+      }}
+
+      it{
+        should contain_exec('aptly_mirror_gpg-example').with({
+          :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123' 'DEF456' 'GHI789'$/,
+          :unless  => /^echo 'ABC123' 'DEF456' 'GHI789' |/,
           :user    => 'root',
         })
       }
