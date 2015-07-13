@@ -102,8 +102,36 @@ describe 'aptly::mirror' do
     end
   end
 
-  describe '#multikey' do
-    context 'with three keys' do
+  describe '#key' do
+    context 'single item not in an array' do
+      let(:params){{
+        :location   => 'http://repo.example.com',
+        :key        => 'ABC123',
+      }}
+
+      it{
+        should contain_exec('aptly_mirror_gpg-example').with({
+          :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
+        })
+      }
+    end
+
+    context 'single item in an array' do
+      let(:params){{
+        :location   => 'http://repo.example.com',
+        :key        => [ 'ABC123' ],
+      }}
+
+      it{
+        should contain_exec('aptly_mirror_gpg-example').with({
+          :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
+        })
+      }
+    end
+
+    context 'multiple items' do
       let(:params){{
         :location   => 'http://repo.example.com',
         :key        => [ 'ABC123', 'DEF456', 'GHI789' ],
@@ -113,7 +141,6 @@ describe 'aptly::mirror' do
         should contain_exec('aptly_mirror_gpg-example').with({
           :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123' 'DEF456' 'GHI789'$/,
           :unless  => /^echo 'ABC123' 'DEF456' 'GHI789' |/,
-          :user    => 'root',
         })
       }
     end
