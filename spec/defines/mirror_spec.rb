@@ -23,8 +23,8 @@ describe 'aptly::mirror' do
 
     it {
       should contain_exec('aptly_mirror_create-example').with({
-        :command => /aptly mirror create example http:\/\/repo\.example\.com precise$/,
-        :unless  => /aptly mirror show example >\/dev\/null$/,
+        :command => /aptly -config \/etc\/aptly.conf mirror create example http:\/\/repo\.example\.com precise$/,
+        :unless  => /aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$/,
         :user    => 'root',
         :require => [
           'Package[aptly]',
@@ -71,8 +71,8 @@ describe 'aptly::mirror' do
 
       it {
         should contain_exec('aptly_mirror_create-example').with({
-          :command => /aptly mirror create example http:\/\/repo\.example\.com precise$/,
-          :unless  => /aptly mirror show example >\/dev\/null$/,
+          :command => /aptly -config \/etc\/aptly.conf mirror create example http:\/\/repo\.example\.com precise$/,
+          :unless  => /aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$/,
           :user    => 'custom_user',
           :require => [
             'Package[aptly]',
@@ -124,7 +124,7 @@ describe 'aptly::mirror' do
 
       it {
         should contain_exec('aptly_mirror_create-example').with_command(
-          /aptly mirror create example http:\/\/repo\.example\.com precise main$/
+          /aptly -config \/etc\/aptly.conf mirror create example http:\/\/repo\.example\.com precise main$/
         )
       }
     end
@@ -138,7 +138,7 @@ describe 'aptly::mirror' do
 
       it {
         should contain_exec('aptly_mirror_create-example').with_command(
-          /aptly mirror create example http:\/\/repo\.example\.com precise main contrib non-free$/
+          /aptly -config \/etc\/aptly.conf mirror create example http:\/\/repo\.example\.com precise main contrib non-free$/
         )
       }
     end

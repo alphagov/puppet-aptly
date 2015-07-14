@@ -8,6 +8,10 @@
 #   Ensure parameter to pass to the package resource.
 #   Default: present
 #
+# [*config_file*]
+#   Absolute path to the configuration file. Defaults to
+#   `/etc/aptly.conf`.
+#
 # [*config*]
 #   Hash of configuration options for `/etc/aptly.conf`.
 #   See http://www.aptly.info/#configuration
@@ -37,14 +41,16 @@
 #
 class aptly (
   $package_ensure = present,
-  $config = {},
-  $repo = true,
-  $key_server = undef,
-  $user = 'root',
-  $aptly_repos = {},
-  $aptly_mirrors = {},
+  $config_file    = '/etc/aptly.conf',
+  $config         = {},
+  $repo           = true,
+  $key_server     = undef,
+  $user           = 'root',
+  $aptly_repos    = {},
+  $aptly_mirrors  = {},
 ) {
 
+  validate_absolute_path($config_file)
   validate_hash($config)
   validate_hash($aptly_repos)
   validate_hash($aptly_mirrors)
@@ -69,10 +75,12 @@ class aptly (
     ensure  => $package_ensure,
   }
 
-  file { '/etc/aptly.conf':
+  file { $config_file:
     ensure  => file,
-    content => inline_template("<%= @config.to_pson %>\n"),
+    content => inline_template("<%= Hash[@config.sort].to_pson %>\n"),
   }
+
+  $aptly_cmd = "/usr/bin/aptly -config ${config_file}"
 
   # Hiera support
   create_resources('::aptly::repo', $aptly_repos)

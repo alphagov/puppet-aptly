@@ -45,7 +45,7 @@ define aptly::mirror (
   include ::aptly
 
   $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
-  $aptly_cmd = '/usr/bin/aptly mirror'
+  $aptly_cmd = "${::aptly::aptly_cmd} mirror"
   $exec_key_title = "aptly_mirror_key-${key}"
 
   if empty($repos) {

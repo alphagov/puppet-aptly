@@ -17,7 +17,7 @@ define aptly::repo(
 
   include ::aptly
 
-  $aptly_cmd = '/usr/bin/aptly repo'
+  $aptly_cmd = "${::aptly::aptly_cmd} repo"
 
   if empty($component) {
     $component_arg = ''
