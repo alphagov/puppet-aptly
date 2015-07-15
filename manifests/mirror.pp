@@ -17,7 +17,8 @@
 #
 # [*key*]
 #   Import the GPG key into the `trustedkeys` keyring so that aptly can
-#   verify the mirror's manifests.
+#   verify the mirror's manifests. May be specified as string or array for
+#   multiple keys.
 #
 # [*keyserver*]
 #   The keyserver to use when download the key
@@ -66,7 +67,6 @@ define aptly::mirror (
 
   $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
   $aptly_cmd = "${::aptly::aptly_cmd} mirror"
-  $exec_key_title = "aptly_mirror_key-${key}"
 
   if empty($architectures) {
     $architectures_arg = ''
@@ -82,12 +82,19 @@ define aptly::mirror (
     $components_arg = " ${components}"
   }
 
-  if !defined(Exec[$exec_key_title]) {
-    exec { $exec_key_title:
-      command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key}'",
-      unless  => "${gpg_cmd} --list-keys '${key}'",
-      user    => $::aptly::user,
-    }
+  if is_array($key) {
+    $key_string = join($key, "' '")
+  } elsif is_string($key) {
+    $key_string = $key
+  } else {
+    fail('$key is neither a string nor an array!')
+  }
+
+  exec { "aptly_mirror_gpg-${title}":
+    path    => '/bin:/usr/bin',
+    command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key_string}'",
+    unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
+    user    => $::aptly::user,
   }
 
   exec { "aptly_mirror_create-${title}":
@@ -97,7 +104,7 @@ define aptly::mirror (
     require => [
       Package['aptly'],
       File['/etc/aptly.conf'],
-      Exec[$exec_key_title],
+      Exec["aptly_mirror_gpg-${title}"],
     ],
   }
 }
