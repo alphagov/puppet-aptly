@@ -14,22 +14,22 @@ describe 'aptly::mirror' do
     }}
 
     it {
-      should contain_exec('aptly_mirror_key-ABC123').with({
+      should contain_exec('aptly_mirror_gpg-example').with({
         :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
-        :unless  => / --list-keys 'ABC123'$/,
+        :unless  => /^echo 'ABC123' |/,
         :user    => 'root',
       })
     }
 
     it {
       should contain_exec('aptly_mirror_create-example').with({
-        :command => /aptly mirror create example http:\/\/repo\.example\.com precise$/,
-        :unless  => /aptly mirror show example >\/dev\/null$/,
+        :command => /aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$/,
+        :unless  => /aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$/,
         :user    => 'root',
         :require => [
           'Package[aptly]',
           'File[/etc/aptly.conf]',
-          'Exec[aptly_mirror_key-ABC123]'
+          'Exec[aptly_mirror_gpg-example]'
         ],
       })
     }
@@ -43,7 +43,7 @@ describe 'aptly::mirror' do
         EOS
       }
 
-      it { should contain_exec('aptly_mirror_key-ABC123') }
+      it { should contain_exec('aptly_mirror_gpg-example-lucid') }
     end
   end
 
@@ -62,22 +62,22 @@ describe 'aptly::mirror' do
       }}
 
       it {
-        should contain_exec('aptly_mirror_key-ABC123').with({
+        should contain_exec('aptly_mirror_gpg-example').with({
           :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
-          :unless  => / --list-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
           :user    => 'custom_user',
         })
       }
 
       it {
         should contain_exec('aptly_mirror_create-example').with({
-          :command => /aptly mirror create example http:\/\/repo\.example\.com precise$/,
-          :unless  => /aptly mirror show example >\/dev\/null$/,
+          :command => /aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$/,
+          :unless  => /aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$/,
           :user    => 'custom_user',
           :require => [
             'Package[aptly]',
             'File[/etc/aptly.conf]',
-            'Exec[aptly_mirror_key-ABC123]'
+            'Exec[aptly_mirror_gpg-example]'
           ],
         })
       }
@@ -93,10 +93,54 @@ describe 'aptly::mirror' do
       }}
 
       it{
-        should contain_exec('aptly_mirror_key-ABC123').with({
+        should contain_exec('aptly_mirror_gpg-example').with({
           :command => / --keyserver 'hkp:\/\/repo.keyserver.com:80' --recv-keys 'ABC123'$/,
-          :unless  => / --list-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
           :user    => 'root',
+        })
+      }
+    end
+  end
+
+  describe '#key' do
+    context 'single item not in an array' do
+      let(:params){{
+        :location   => 'http://repo.example.com',
+        :key        => 'ABC123',
+      }}
+
+      it{
+        should contain_exec('aptly_mirror_gpg-example').with({
+          :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
+        })
+      }
+    end
+
+    context 'single item in an array' do
+      let(:params){{
+        :location   => 'http://repo.example.com',
+        :key        => [ 'ABC123' ],
+      }}
+
+      it{
+        should contain_exec('aptly_mirror_gpg-example').with({
+          :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$/,
+          :unless  => /^echo 'ABC123' |/,
+        })
+      }
+    end
+
+    context 'multiple items' do
+      let(:params){{
+        :location   => 'http://repo.example.com',
+        :key        => [ 'ABC123', 'DEF456', 'GHI789' ],
+      }}
+
+      it{
+        should contain_exec('aptly_mirror_gpg-example').with({
+          :command => / --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123' 'DEF456' 'GHI789'$/,
+          :unless  => /^echo 'ABC123' 'DEF456' 'GHI789' |/,
         })
       }
     end
@@ -124,7 +168,7 @@ describe 'aptly::mirror' do
 
       it {
         should contain_exec('aptly_mirror_create-example').with_command(
-          /aptly mirror create example http:\/\/repo\.example\.com precise main$/
+          /aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise main$/
         )
       }
     end
@@ -138,9 +182,94 @@ describe 'aptly::mirror' do
 
       it {
         should contain_exec('aptly_mirror_create-example').with_command(
-          /aptly mirror create example http:\/\/repo\.example\.com precise main contrib non-free$/
+          /aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise main contrib non-free$/
         )
       }
     end
   end
+
+  describe '#architectures' do
+    context 'not an array' do
+      let(:params) {{
+        :location => 'http://repo.example.com',
+        :key      => 'ABC123',
+        :repos    => 'this is a string',
+      }}
+
+      it {
+        should raise_error(Puppet::Error, /is not an Array/)
+      }
+    end
+
+    context 'with array' do
+      let(:params) {{
+        :location      => 'http://repo.example.com',
+        :key           => 'ABC123',
+        :architectures => ['i386', 'amd64'],
+      }}
+
+      it {
+        should contain_exec('aptly_mirror_create-example').with_command(
+          /aptly -config \/etc\/aptly.conf mirror create -architectures="i386,amd64" -with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$/
+        )
+      }
+    end
+  end
+
+  describe '#with_sources' do
+    context 'not a boolean' do
+      let(:params) {{
+        :location     => 'http://repo.example.com',
+        :key          => 'ABC123',
+        :with_sources => 'this is a string',
+      }}
+
+      it {
+        should raise_error(Puppet::Error, /is not a boolean/)
+      }
+    end
+
+    context 'with boolean true' do
+      let(:params) {{
+        :location     => 'http://repo.example.com',
+        :key          => 'ABC123',
+        :with_sources => true,
+      }}
+
+      it {
+        should contain_exec('aptly_mirror_create-example').with_command(
+          /aptly -config \/etc\/aptly.conf mirror create *-with-sources=true -with-udebs=false example http:\/\/repo\.example\.com precise$/
+        )
+      }
+    end
+  end
+
+  describe '#with_udebs' do
+    context 'not a boolean' do
+      let(:params) {{
+        :location   => 'http://repo.example.com',
+        :key        => 'ABC123',
+        :with_udebs => 'this is a string',
+      }}
+
+      it {
+        should raise_error(Puppet::Error, /is not a boolean/)
+      }
+    end
+
+    context 'with boolean true' do
+      let(:params) {{
+        :location   => 'http://repo.example.com',
+        :key        => 'ABC123',
+        :with_udebs => true,
+      }}
+
+      it {
+        should contain_exec('aptly_mirror_create-example').with_command(
+          /aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=true example http:\/\/repo\.example\.com precise$/
+        )
+      }
+    end
+  end
+
 end
