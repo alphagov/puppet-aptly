@@ -64,7 +64,7 @@ class aptly (
       release     => 'squeeze',
       repos       => 'main',
       key_server  => $key_server,
-      key         => '2A194991',
+      key         => 'B6140515643C2AE155596690E083A3782A194991',
       include_src => false,
     }
 
