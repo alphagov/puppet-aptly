@@ -191,9 +191,9 @@ describe 'aptly::mirror' do
   describe '#architectures' do
     context 'not an array' do
       let(:params) {{
-        :location => 'http://repo.example.com',
-        :key      => 'ABC123',
-        :repos    => 'this is a string',
+        :location      => 'http://repo.example.com',
+        :key           => 'ABC123',
+        :architectures => 'this is a string',
       }}
 
       it {
@@ -201,16 +201,30 @@ describe 'aptly::mirror' do
       }
     end
 
-    context 'with array' do
+    context 'single item' do 
+      let(:params) {{
+	:location      => 'http://repo.example.com',
+	:key           => 'ABC123',
+	:architectures => ['amd64'],
+      }}
+
+      it {
+	should contain_exec('aptly_mirror_create-example').with_command(
+	  /aptly -config \/etc\/aptly.conf mirror create -architectures="amd64" -with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$/
+	)
+      }
+    end
+
+    context 'multiple items' do
       let(:params) {{
         :location      => 'http://repo.example.com',
         :key           => 'ABC123',
-        :architectures => ['i386', 'amd64'],
+        :architectures => ['i386', 'amd64','armhf'],
       }}
 
       it {
         should contain_exec('aptly_mirror_create-example').with_command(
-          /aptly -config \/etc\/aptly.conf mirror create -architectures="i386,amd64" -with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$/
+          /aptly -config \/etc\/aptly.conf mirror create -architectures="i386,amd64,armhf" -with-sources=false -with-udebs=false example http:\/\/repo\.example\.com precise$/
         )
       }
     end
