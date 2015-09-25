@@ -103,6 +103,27 @@ EOS
     end
   end
 
+  describe '#config_contents' do
+    context 'not a string' do
+      let(:params) {{
+         :config_contents => { 'a' => 1 }
+      }}
+      it {
+        should raise_error(Puppet::Error, /is not a string/)
+      }
+    end
+
+    context 'rootDir and architectures' do
+      let(:params) {{
+        :config_contents => '{"rootDir":"/srv/aptly", "architectures":["i386", "amd64"]}'
+      }}
+
+      it {
+        should contain_file('/etc/aptly.conf').with_content(params[:config_contents])
+      }
+    end
+  end
+
   describe '#repo' do
     context 'not a bool' do
       let(:params) {{

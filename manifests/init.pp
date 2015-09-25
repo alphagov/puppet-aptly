@@ -11,6 +11,10 @@
 # [*config_file*]
 #   Absolute path to the configuration file. Defaults to
 #   `/etc/aptly.conf`.
+
+# [*config_contents*]
+#   Contents of the config file.
+#   Default: undef
 #
 # [*config*]
 #   Hash of configuration options for `/etc/aptly.conf`.
@@ -40,14 +44,15 @@
 #   Default: {}
 #
 class aptly (
-  $package_ensure = present,
-  $config_file    = '/etc/aptly.conf',
-  $config         = {},
-  $repo           = true,
-  $key_server     = undef,
-  $user           = 'root',
-  $aptly_repos    = {},
-  $aptly_mirrors  = {},
+  $package_ensure  = present,
+  $config_file     = '/etc/aptly.conf',
+  $config          = {},
+  $config_contents = undef,
+  $repo            = true,
+  $key_server      = undef,
+  $user            = 'root',
+  $aptly_repos     = {},
+  $aptly_mirrors   = {},
 ) {
 
   validate_absolute_path($config_file)
@@ -57,6 +62,10 @@ class aptly (
   validate_bool($repo)
   validate_string($key_server)
   validate_string($user)
+
+  if $config_contents {
+    validate_string($config_contents)
+  }
 
   if $repo {
     apt::source { 'aptly':
@@ -75,9 +84,14 @@ class aptly (
     ensure  => $package_ensure,
   }
 
+  $config_file_contents = $config_contents ? {
+    undef   => inline_template("<%= Hash[@config.sort].to_pson %>\n"),
+    default => $config_contents,
+  }
+
   file { $config_file:
     ensure  => file,
-    content => inline_template("<%= Hash[@config.sort].to_pson %>\n"),
+    content => $config_file_contents,
   }
 
   $aptly_cmd = "/usr/bin/aptly -config ${config_file}"
