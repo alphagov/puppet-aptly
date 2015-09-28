@@ -144,6 +144,18 @@ describe 'aptly::mirror' do
         })
       }
     end
+
+    context 'no key passed' do
+      let(:params) {
+        {
+          :location   => 'http://repo.example.com',
+        }
+      }
+
+      it {
+        should_not contain_exec('aptly_mirror_gpg-example')
+      }
+    end
   end
 
   describe '#repos' do
