@@ -97,16 +97,23 @@ define aptly::mirror (
       unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
       user    => $::aptly::user,
     }
+
+    $exec_aptly_mirror_create_require = [
+      Package['aptly'],
+      File['/etc/aptly.conf'],
+      Exec["aptly_mirror_gpg-${title}"],
+    ]
+  } else {
+    $exec_aptly_mirror_create_require = [
+      Package['aptly'],
+      File['/etc/aptly.conf'],
+    ]
   }
 
   exec { "aptly_mirror_create-${title}":
     command => "${aptly_cmd} create ${architectures_arg} -with-sources=${with_sources} -with-udebs=${with_udebs} ${title} ${location} ${release}${components_arg}",
     unless  => "${aptly_cmd} show ${title} >/dev/null",
     user    => $::aptly::user,
-    require => [
-      Package['aptly'],
-      File['/etc/aptly.conf'],
-      Exec["aptly_mirror_gpg-${title}"],
-    ],
+    require => $exec_aptly_mirror_create_require,
   }
 }
