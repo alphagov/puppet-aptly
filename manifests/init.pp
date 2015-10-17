@@ -65,7 +65,6 @@ class aptly (
       repos       => 'main',
       key_server  => $key_server,
       key         => 'B6140515643C2AE155596690E083A3782A194991',
-      include_src => false,
     }
 
     Apt::Source['aptly'] -> Package['aptly']

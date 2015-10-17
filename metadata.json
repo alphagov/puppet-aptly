@@ -7,7 +7,7 @@
   "source": "https://github.com/gds-operations/puppet-aptly",
   "dependencies": [
     {"name": "puppetlabs/stdlib", "version_requirement": ">=3.0.0"},
-    {"name": "puppetlabs/apt", "version_requirement": ">=1.0.0 <2.0.0"}
+    {"name": "puppetlabs/apt", "version_requirement": ">=2.0.0 <3.0.0"}
   ],
   "project_page": "https://github.com/gds-operations/puppet-aptly"
 }
