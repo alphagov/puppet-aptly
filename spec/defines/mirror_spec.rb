@@ -5,6 +5,7 @@ describe 'aptly::mirror' do
   let(:facts) {{
     :lsbdistid       => 'Debian',
     :lsbdistcodename => 'precise',
+    :osfamily        => 'Debian',
   }}
 
   describe 'param defaults and mandatory' do
