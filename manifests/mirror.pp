@@ -84,7 +84,7 @@ define aptly::mirror (
 
   if is_array($key) {
     $key_string = join($key, "' '")
-  } elsif is_string($key) {
+  } elsif is_string($key) or is_integer($key) {
     $key_string = $key
   } else {
     fail('$key is neither a string nor an array!')
