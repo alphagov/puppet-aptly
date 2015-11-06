@@ -5,6 +5,12 @@
   "license": "MIT",
   "summary": "Module to manage aptly",
   "source": "https://github.com/gds-operations/puppet-aptly",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": ["12.04", "14.04"]
+    }
+   ],
   "dependencies": [
     {"name": "puppetlabs/stdlib", "version_requirement": ">=3.0.0"},
     {"name": "puppetlabs/apt", "version_requirement": ">=1.0.0 <2.0.0"}
