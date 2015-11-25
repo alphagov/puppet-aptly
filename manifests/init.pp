@@ -60,11 +60,11 @@ class aptly (
 
   if $repo {
     apt::source { 'aptly':
-      location    => 'http://repo.aptly.info',
-      release     => 'squeeze',
-      repos       => 'main',
-      key_server  => $key_server,
-      key         => 'B6140515643C2AE155596690E083A3782A194991',
+      location   => 'http://repo.aptly.info',
+      release    => 'squeeze',
+      repos      => 'main',
+      key_server => $key_server,
+      key        => 'B6140515643C2AE155596690E083A3782A194991',
     }
 
     Apt::Source['aptly'] -> Package['aptly']
