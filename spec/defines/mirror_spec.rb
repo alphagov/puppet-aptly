@@ -201,7 +201,7 @@ describe 'aptly::mirror' do
       }
     end
 
-    context 'single item' do 
+    context 'single item' do
       let(:params) {{
 	:location      => 'http://repo.example.com',
 	:key           => 'ABC123',
