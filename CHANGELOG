@@ -1,3 +1,20 @@
+2015-12-04 Release 0.4.0
+- Drop support for Puppet 2.7 and for Puppet 3.1 but only on Ruby 2
+- Start running tests against Puppet 3.6 and 3.7
+- Add a defined type `aptly::snapshot` to create Aptly snapshots (thanks @mklette)
+- Add `$architectures`, `$with_sources` and `$with_udebs` parameters to
+  `aptly::mirror` (thanks @mklette and @dw-thomast)
+- Add `$architectures`, `$comment` and `$distribution` parameters to
+  `aptly::repo` (thanks @mklette)
+- Add `$config_file` and `$config_contents` parameters to `aptly` class
+  to allow changing the location on disk and contents of the config file
+  (thanks @mklette and @antonio)
+- Allow an `aptly::mirror` to have more than one key (thanks @dw-thomast)
+- Use full 40 character key for `repo.aptly.info` as short fingerprints are
+  susceptible to collision attacks (thanks @amosshapira)
+- Fix type check of `$key` in `aptly::mirror` (thanks @sw0x2A)
+- Fix comment in `aptly::mirror` (thanks @zeysh)
+
 2015-04-23 Release 0.3.0
 - Add an `aptly::api` class for configuring aptly's API service.
 - Add support for specifying repos and mirrors in hieradata.
