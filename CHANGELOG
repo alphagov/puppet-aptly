@@ -1,6 +1,8 @@
 Unreleased
 - Update support for puppetlabs/apt from version 1-2 to version 2-3
   (thanks @zxjinn)
+- Do not run an exec to add a GPG key in `aptly::mirror` if no
+  GPG key is provided (thanks @antonio)
 
 2015-12-04 Release 0.4.0
 - Drop support for Puppet 2.7 and for Puppet 3.1 but only on Ruby 2
