@@ -1,3 +1,7 @@
+Unreleased
+- Update support for puppetlabs/apt from version 1-2 to version 2-3
+  (thanks @zxjinn)
+
 2015-12-04 Release 0.4.0
 - Drop support for Puppet 2.7 and for Puppet 3.1 but only on Ruby 2
 - Start running tests against Puppet 3.6 and 3.7
