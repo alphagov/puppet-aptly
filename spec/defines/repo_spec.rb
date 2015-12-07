@@ -5,6 +5,7 @@ describe 'aptly::repo' do
 
   let(:facts){{
     :lsbdistid => 'ubuntu',
+    :osfamily  => 'Debian',
   }}
 
   describe 'param defaults' do
