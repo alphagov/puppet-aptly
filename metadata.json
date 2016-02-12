@@ -1,10 +1,13 @@
 {
   "name": "gdsoperations-aptly",
   "version": "0.4.0",
-  "author": "gdsoperations",
+  "author": "Government Digital Service",
   "license": "MIT",
   "summary": "Module to manage aptly",
-  "source": "https://github.com/gds-operations/puppet-aptly",
+  "source":       "https://github.com/gds-operations/puppet-aptly",
+  "project_page": "https://github.com/gds-operations/puppet-aptly",
+  "issues_url":   "https://github.com/gds-operations/puppet-aptly/issues",
+  "tags":         ["apt", "aptly"],
   "operatingsystem_support": [
     {
       "operatingsystem": "Ubuntu",
@@ -12,7 +15,7 @@
     }
    ],
   "dependencies": [
-    {"name": "puppetlabs/stdlib", "version_requirement": ">=3.0.0"},
+    {"name": "puppetlabs/stdlib", "version_requirement": ">=3.0.0 <5.0.0"},
     {"name": "puppetlabs/apt", "version_requirement": ">=2.0.0 <3.0.0"}
   ],
   "project_page": "https://github.com/gds-operations/puppet-aptly"
