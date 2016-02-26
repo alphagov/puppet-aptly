@@ -76,7 +76,7 @@ class aptly (
       key        => 'B6140515643C2AE155596690E083A3782A194991',
     }
 
-    Apt::Source['aptly'] -> Package['aptly']
+    Apt::Source['aptly'] -> Class['apt::update'] -> Package['aptly']
   }
 
   package { 'aptly':

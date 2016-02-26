@@ -10,7 +10,7 @@ describe 'aptly' do
     let(:params) {{ }}
 
     it { should contain_apt__source('aptly') }
-    it { should contain_package('aptly').that_requires('Apt::Source[aptly]') }
+    it { should contain_package('aptly').that_requires('Apt::Update') }
     it { should contain_file('/etc/aptly.conf').with_content("{}\n") }
   end
 
