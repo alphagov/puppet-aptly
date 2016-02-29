@@ -131,4 +131,18 @@ describe 'aptly::api' do
       it { should raise_error(Puppet::Error, /Valid values for \$log: none, log/) }
     end
   end
+
+  describe 'enable_cli_and_http' do
+    context 'false (default)' do
+      it { should contain_file('aptly-upstart').without_content(/ -no-lock/) }
+    end
+
+    context 'true' do
+      let(:params) {{
+        :enable_cli_and_http => true
+      }}
+
+      it { should contain_file('aptly-upstart').with_content(/ -no-lock/) }
+    end
+  end
 end
