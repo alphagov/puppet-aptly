@@ -1,6 +1,6 @@
 {
   "name": "gdsoperations-aptly",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "Government Digital Service",
   "license": "MIT",
   "summary": "Module to manage aptly",

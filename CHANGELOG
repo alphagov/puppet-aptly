@@ -1,3 +1,11 @@
+2016-06-03 Release 0.6.0
+- Support Ruby 2.1.0 and 2.2.0
+- Support Puppet 3.8
+- Stop testing Puppet 3.1, 3.2, 3.6 and 3.7
+- Ensure that `apt::update` runs before installing aptly
+- Add parameter for `-no-lock` option
+- Update the aptly repository's GPG key
+
 2016-02-26 Release 0.5.0
 - Update support for puppetlabs/apt from version 1-2 to version 2-3
   (thanks @zxjinn)
