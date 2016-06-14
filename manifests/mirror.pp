@@ -45,6 +45,11 @@
 #   Boolean to control whether Aptly should also download .udeb packages.
 #   Default: false
 #
+# [*environment*]
+#   Optional environment variable to pass to the exec.
+#   Usefull for specifiying a proxy f.i.
+#   example: ['http_proxy=http://127.0.0.2:3128']
+#   Default: []
 define aptly::mirror (
   $location,
   $key           = undef,
@@ -54,12 +59,14 @@ define aptly::mirror (
   $repos         = [],
   $with_sources  = false,
   $with_udebs    = false,
+  $environment   = [],
 ) {
   validate_string($keyserver)
   validate_array($repos)
   validate_array($architectures)
   validate_bool($with_sources)
   validate_bool($with_udebs)
+  validate_array($environment)
 
   include ::aptly
 
@@ -109,9 +116,10 @@ define aptly::mirror (
   }
 
   exec { "aptly_mirror_create-${title}":
-    command => "${aptly_cmd} create ${architectures_arg} -with-sources=${with_sources} -with-udebs=${with_udebs} ${title} ${location} ${release}${components_arg}",
-    unless  => "${aptly_cmd} show ${title} >/dev/null",
-    user    => $::aptly::user,
-    require => $exec_aptly_mirror_create_require,
+    command     => "${aptly_cmd} create ${architectures_arg} -with-sources=${with_sources} -with-udebs=${with_udebs} ${title} ${location} ${release}${components_arg}",
+    unless      => "${aptly_cmd} show ${title} >/dev/null",
+    user        => $::aptly::user,
+    require     => $exec_aptly_mirror_create_require,
+    environment => $environment,
   }
 }
