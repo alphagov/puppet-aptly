@@ -103,6 +103,47 @@ describe 'aptly::mirror' do
     end
   end
 
+  describe '#environment' do
+    context 'not an array' do
+      let(:params){{
+        :location    => 'http://repo.example.com',
+        :key         => 'ABC123',
+        :environment => 'FOO=bar',
+      }}
+
+      it {
+        should raise_error(Puppet::Error, /is not an Array/)
+      }
+    end
+
+    context 'defaults to empty array' do
+      let(:params){{
+        :location    => 'http://repo.example.com',
+        :key         => 'ABC123',
+      }}
+
+      it {
+        should contain_exec('aptly_mirror_create-example').with({
+          :environment => [],
+        })
+      }
+    end
+
+    context 'with FOO set to bar' do
+      let(:params){{
+        :location    => 'http://repo.example.com',
+        :key         => [ 'ABC123' ],
+        :environment => ['FOO=bar'],
+      }}
+
+      it{
+        should contain_exec('aptly_mirror_create-example').with({
+          :environment => ['FOO=bar'],
+        })
+      }
+    end
+  end
+
   describe '#key' do
     context 'single item not in an array' do
       let(:params){{
