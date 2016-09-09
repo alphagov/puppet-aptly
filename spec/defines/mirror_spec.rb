@@ -340,4 +340,48 @@ describe 'aptly::mirror' do
     end
   end
 
+  describe '#filter_with_deps' do
+    context 'not a boolean' do
+      let(:params) {{
+        :location         => 'http://repo.example.com',
+        :key              => 'ABC123',
+        :filter_with_deps => 'this is a string',
+      }}
+
+      it {
+        should raise_error(Puppet::Error, /is not a boolean/)
+      }
+    end
+
+    context 'with boolean true' do
+      let(:params) {{
+        :location         => 'http://repo.example.com',
+        :key              => 'ABC123',
+        :filter_with_deps => true,
+      }}
+
+      it {
+        should contain_exec('aptly_mirror_create-example').with_command(
+          /aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false -filter-with-deps example http:\/\/repo\.example\.com precise$/
+        )
+      }
+    end
+  end
+
+  describe '#filter' do
+    context 'with filter' do
+      let(:params){{
+        :location   => 'http://repo.example.com',
+        :key        => 'ABC123',
+        :filter     => 'this is a string',
+      }}
+  
+      it {
+        should contain_exec('aptly_mirror_create-example').with_command(
+          /aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false -filter="this is a string" example http:\/\/repo\.example\.com precise$/
+        )
+      }
+    end
+  end
+
 end

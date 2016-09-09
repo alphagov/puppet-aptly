@@ -22,6 +22,9 @@
 #   The keyserver to use when download the key
 #   Default: 'keyserver.ubuntu.com'
 #
+# [*filter*]
+#   Package query that is applied to packages in the mirror
+#
 # [*release*]
 #   Distribution to mirror for.
 #   Default: `$::lsbdistcodename`
@@ -45,24 +48,33 @@
 #   Boolean to control whether Aptly should also download .udeb packages.
 #   Default: false
 #
+# [*filter_with_deps*]
+#   Boolean to control whether when filtering to include dependencies of matching 
+#   packages as well
+#   Default: false
+#
 # [*environment*]
 #   Optional environment variables to pass to the exec.
 #   Example: ['http_proxy=http://127.0.0.2:3128']
 #   Default: []
 define aptly::mirror (
   $location,
-  $key           = undef,
-  $keyserver     = 'keyserver.ubuntu.com',
-  $release       = $::lsbdistcodename,
-  $architectures = [],
-  $repos         = [],
-  $with_sources  = false,
-  $with_udebs    = false,
-  $environment   = [],
+  $key              = undef,
+  $keyserver        = 'keyserver.ubuntu.com',
+  $filter           = '',
+  $release          = $::lsbdistcodename,
+  $architectures    = [],
+  $repos            = [],
+  $with_sources     = false,
+  $with_udebs       = false,
+  $filter_with_deps = false,
+  $environment      = [],
 ) {
   validate_string($keyserver)
+  validate_string($filter)
   validate_array($repos)
   validate_array($architectures)
+  validate_bool($filter_with_deps)
   validate_bool($with_sources)
   validate_bool($with_udebs)
   validate_array($environment)
@@ -84,6 +96,18 @@ define aptly::mirror (
   } else {
     $components = join($repos, ' ')
     $components_arg = " ${components}"
+  }
+
+  if empty($filter) {
+    $filter_arg = ''
+  } else{
+    $filter_arg = " -filter=\"${filter}\""
+  }
+
+  if ($filter_with_deps == true) {
+    $filter_with_deps_arg = ' -filter-with-deps'
+  } else{
+    $filter_with_deps_arg = ''
   }
 
   if $key {
@@ -115,7 +139,7 @@ define aptly::mirror (
   }
 
   exec { "aptly_mirror_create-${title}":
-    command     => "${aptly_cmd} create ${architectures_arg} -with-sources=${with_sources} -with-udebs=${with_udebs} ${title} ${location} ${release}${components_arg}",
+    command     => "${aptly_cmd} create ${architectures_arg} -with-sources=${with_sources} -with-udebs=${with_udebs}${filter_arg}${filter_with_deps_arg} ${title} ${location} ${release}${components_arg}",
     unless      => "${aptly_cmd} show ${title} >/dev/null",
     user        => $::aptly::user,
     require     => $exec_aptly_mirror_create_require,
