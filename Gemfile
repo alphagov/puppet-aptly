@@ -20,3 +20,8 @@ gem 'puppet-syntax', '2.0.0'
 # dependency of the system tests.
 gem 'fog', '1.34.0'
 gem 'fog-google', '0.1.0'
+
+# Older version required for ruby 1.9 compatability, as it is pulled in as dependency
+# of Puppet.  Versions of json_pure greater than 2.0.1 require Ruby 2.
+gem 'json_pure', '<= 2.0.1'
+gem 'json', '<= 1.8.3'
