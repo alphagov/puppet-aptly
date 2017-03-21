@@ -96,7 +96,7 @@ describe 'aptly::api' do
         :listen => false
       }}
 
-      it { should raise_error(Puppet::Error, /Valid values for \$listen: :port, <ip>:<port>/) }
+      it { should raise_error(Puppet::Error, /input needs to be a String/) }
     end
 
     context 'invalid format' do
