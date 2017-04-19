@@ -113,4 +113,36 @@ describe 'aptly::repo' do
     }
   end
 
+  describe 'custom config_file' do
+    context 'config_file set in aptly' do
+      let(:pre_condition)  { <<-EOS
+        class { 'aptly':
+          config_file => '/etc/custom_aptly.conf',
+        }
+        EOS
+      }
+      it {
+        should contain_exec('aptly_repo_create-example').with({
+          :command  => /aptly -config \/etc\/custom_aptly.conf repo create *example$/,
+          :unless   => /aptly -config \/etc\/custom_aptly.conf repo show example >\/dev\/null$/,
+          :user     => 'root',
+          :require  => [ 'Package[aptly]','File[/etc/custom_aptly.conf]' ],
+        })
+      }
+    end
+
+    context 'custom config_file for the repo' do
+      let(:params){{
+        :config_file => '/etc/custom_aptly_2.conf',
+      }}
+      it {
+        should contain_exec('aptly_repo_create-example').with({
+          :command  => /aptly -config \/etc\/custom_aptly_2.conf repo create *example$/,
+          :unless   => /aptly -config \/etc\/custom_aptly_2.conf repo show example >\/dev\/null$/,
+          :user     => 'root',
+          :require  => [ 'Package[aptly]','File[/etc/custom_aptly_2.conf]' ],
+        })
+      }
+    end
+  end
 end

@@ -17,6 +17,9 @@
 #   Specify which component to put the package in. This option will only works
 #   for aptly version >= 0.5.0.
 #
+# [*config_file*]
+#   Specify the config file for the repository.
+#
 # [*distribution*]
 #   Specify the default distribution to be used when publishing this repository.
 
@@ -24,6 +27,7 @@ define aptly::repo(
   $architectures = [],
   $comment       = '',
   $component     = '',
+  $config_file   = '',
   $distribution  = '',
 ){
   validate_array($architectures)
@@ -33,13 +37,22 @@ define aptly::repo(
 
   include ::aptly
 
-  $aptly_cmd = "${::aptly::aptly_cmd} repo"
 
   if empty($architectures) {
     $architectures_arg = ''
   } else{
     $architectures_as_s = join($architectures, ',')
     $architectures_arg = "-architectures=\"${architectures_as_s}\""
+  }
+
+  if empty($config_file) {
+    $config_arg = "-config ${::aptly::config_file}"
+    $config     = $::aptly::config_file
+    $aptly_cmd  = "${::aptly::aptly_cmd} repo"
+  } else {
+    $config_arg = "-config ${config_file}"
+    $config     = $config_file
+    $aptly_cmd  = "/usr/bin/aptly ${config_arg} repo"
   }
 
   if empty($comment) {
@@ -66,7 +79,7 @@ define aptly::repo(
     user    => $::aptly::user,
     require => [
       Package['aptly'],
-      File['/etc/aptly.conf'],
+      File[$config],
     ],
   }
 }
