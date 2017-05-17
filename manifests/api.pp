@@ -56,7 +56,7 @@ class aptly::api (
         path    => '/etc/systemd/system/aptly-api.service',
         content => template('aptly/etc/aptly-api.systemd.erb'),
       }~>
-      exec { "aptly-api-systemd-reload":
+      exec { 'aptly-api-systemd-reload':
         command     => 'systemctl daemon-reload',
         path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
         refreshonly => true,
