@@ -1,0 +1,17 @@
+[Unit]
+Description=Aptly-api
+Wants=basic.target
+After=basic.target network.target
+
+[Service]
+User=<%= @user %>
+Group=<%= @group %>
+ExecStart=/usr/bin/aptly api serve -listen=<%= @listen %><% if @enable_cli_and_http %> -no-lock<% end %>
+
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target

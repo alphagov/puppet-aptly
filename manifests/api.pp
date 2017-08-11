@@ -45,16 +45,27 @@ class aptly::api (
 
     validate_re($log, ['^none|log$'], 'Valid values for $log: none, log')
 
-    file{'aptly-upstart':
-      path    => '/etc/init/aptly-api.conf',
-      content => template('aptly/etc/aptly.init.erb'),
+    if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') < 0 {
+      file{'aptly-upstart':
+        path    => '/etc/init/aptly-api.conf',
+        content => template('aptly/etc/aptly-api.init.erb'),
+        notify  => Service['aptly-api'],
+      }
+    } else {
+      file{'aptly-systemd':
+        path    => '/etc/systemd/system/aptly-api.service',
+        content => template('aptly/etc/aptly-api.systemd.erb'),
+      }~>
+      exec { 'aptly-api-systemd-reload':
+        command     => 'systemctl daemon-reload',
+        path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
+        refreshonly => true,
+        notify      => Service['aptly-api'],
+      }
     }
 
     service{'aptly-api':
       ensure => $ensure,
       enable => true,
     }
-
-    File['aptly-upstart'] ~> Service['aptly-api']
-
 }
