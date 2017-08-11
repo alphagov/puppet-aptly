@@ -1,6 +1,6 @@
 {
   "name": "gdsoperations-aptly",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "author": "Government Digital Service",
   "license": "MIT",
   "summary": "Module to manage aptly",
@@ -11,7 +11,7 @@
   "operatingsystem_support": [
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": ["12.04", "14.04"]
+      "operatingsystemrelease": ["12.04", "14.04", "16.04"]
     }
    ],
   "dependencies": [
