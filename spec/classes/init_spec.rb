@@ -39,7 +39,7 @@ describe 'aptly' do
       it "should override apt::source (somekeyserver.com)" do
         should contain_apt__source('aptly').with(
           :key => {
-            :server => 'somekeyserver.com',
+            'server' => 'somekeyserver.com',
           }
         )
       end
