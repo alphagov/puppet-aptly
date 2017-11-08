@@ -1,18 +1,15 @@
 ---
-# Verify this with: http://lint.travis-ci.org/
 language: ruby
-sudo: false
-# Delete dependency locks for matrix builds.
 before_install: rm Gemfile.lock || true
+bundler_args: --without functional_tests
 script: bundle exec rake test
-rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.0
-env:
-  - PUPPET_VERSION="~> 3.8.0"
-  - PUPPET_VERSION="~> 4.6.0"
 matrix:
+  fast_finish: true
+  include:
+    - rvm: 1.9.3
+      env: PUPPET_VERSION="~> 3.8.0"
+    - rvm: 2.4.0
+      env: PUPPET_VERSION="~> 5.3.0"
   allow_failures:
-  - env: PUPPET_VERSION="~> 4.6.0"
-
+    - rvm: 2.4.0
+      env: PUPPET_VERSION="~> 5.3.0"
