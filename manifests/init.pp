@@ -11,7 +11,7 @@
 # [*config_file*]
 #   Absolute path to the configuration file. Defaults to
 #   `/etc/aptly.conf`.
-
+#
 # [*config_contents*]
 #   Contents of the config file.
 #   Default: undef

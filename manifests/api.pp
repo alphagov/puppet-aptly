@@ -37,35 +37,35 @@ class aptly::api (
   $enable_cli_and_http = false,
   ) {
 
-    validate_re($ensure, ['^stopped|running$'], 'Valid values for $ensure: stopped, running')
+  validate_re($ensure, ['^stopped|running$'], 'Valid values for $ensure: stopped, running')
 
-    validate_string($user, $group)
+  validate_string($user, $group)
 
-    validate_re($listen, ['^[0-9.]*:[0-9]+$'], 'Valid values for $listen: :port, <ip>:<port>')
+  validate_re($listen, ['^[0-9.]*:[0-9]+$'], 'Valid values for $listen: :port, <ip>:<port>')
 
-    validate_re($log, ['^none|log$'], 'Valid values for $log: none, log')
+  validate_re($log, ['^none|log$'], 'Valid values for $log: none, log')
 
-    if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') < 0 {
-      file{'aptly-upstart':
-        path    => '/etc/init/aptly-api.conf',
-        content => template('aptly/etc/aptly-api.init.erb'),
-        notify  => Service['aptly-api'],
-      }
-    } else {
-      file{'aptly-systemd':
-        path    => '/etc/systemd/system/aptly-api.service',
-        content => template('aptly/etc/aptly-api.systemd.erb'),
-      }
-      ~> exec { 'aptly-api-systemd-reload':
-        command     => 'systemctl daemon-reload',
-        path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
-        refreshonly => true,
-        notify      => Service['aptly-api'],
-      }
+  if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') < 0 {
+    file { 'aptly-upstart':
+      path    => '/etc/init/aptly-api.conf',
+      content => template('aptly/etc/aptly-api.init.erb'),
+      notify  => Service['aptly-api'],
     }
-
-    service{'aptly-api':
-      ensure => $ensure,
-      enable => true,
+  } else {
+    file { 'aptly-systemd':
+      path    => '/etc/systemd/system/aptly-api.service',
+      content => template('aptly/etc/aptly-api.systemd.erb'),
     }
+    ~> exec { 'aptly-api-systemd-reload':
+      command     => 'systemctl daemon-reload',
+      path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
+      refreshonly => true,
+      notify      => Service['aptly-api'],
+    }
+  }
+
+  service { 'aptly-api':
+    ensure => $ensure,
+    enable => true,
+  }
 }
