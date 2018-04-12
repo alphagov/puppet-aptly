@@ -73,7 +73,7 @@ class aptly (
       release    => 'squeeze',
       repos      => 'main',
       key_server => $key_server,
-      key        => 'DF32BC15E2145B3FA151AED19E3E53F19C7DE460',
+      key        => '26DA9D8630302E0B86A7A2CBED75B5A4483DA07C',
     }
 
     Apt::Source['aptly'] -> Class['apt::update'] -> Package['aptly']
