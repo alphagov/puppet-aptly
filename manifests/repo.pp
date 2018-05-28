@@ -21,16 +21,11 @@
 #   Specify the default distribution to be used when publishing this repository.
 
 define aptly::repo(
-  $architectures = [],
-  $comment       = '',
-  $component     = '',
-  $distribution  = '',
+  Array $architectures = [],
+  String $comment       = '',
+  String $component     = '',
+  String $distribution  = '',
 ){
-  validate_array($architectures)
-  validate_string($comment)
-  validate_string($component)
-  validate_string($distribution)
-
   include ::aptly
 
   $aptly_cmd = "${::aptly::aptly_cmd} repo"

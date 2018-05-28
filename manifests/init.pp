@@ -6,7 +6,7 @@
 #
 # [*package_ensure*]
 #   Ensure parameter to pass to the package resource.
-#   Default: present
+#   Default: 'present'
 #
 # [*config_file*]
 #   Absolute path to the configuration file. Defaults to
@@ -44,29 +44,16 @@
 #   Default: {}
 #
 class aptly (
-  $package_ensure  = present,
-  $config_file     = '/etc/aptly.conf',
-  $config          = {},
-  $config_contents = undef,
-  $repo            = true,
-  $key_server      = undef,
-  $user            = 'root',
-  $aptly_repos     = {},
-  $aptly_mirrors   = {},
+  String               $package_ensure  = 'present',
+  Stdlib::Absolutepath $config_file     = '/etc/aptly.conf',
+  Hash                 $config          = {},
+  Optional[String]     $config_contents = undef,
+  Boolean              $repo            = true,
+  Optional[String]     $key_server      = undef,
+  String               $user            = 'root',
+  Hash                 $aptly_repos     = {},
+  Hash                 $aptly_mirrors   = {},
 ) {
-
-  validate_absolute_path($config_file)
-  validate_hash($config)
-  validate_hash($aptly_repos)
-  validate_hash($aptly_mirrors)
-  validate_bool($repo)
-  validate_string($key_server)
-  validate_string($user)
-
-  if $config_contents {
-    validate_string($config_contents)
-  }
-
   if $repo {
     apt::source { 'aptly':
       location => 'http://repo.aptly.info',
