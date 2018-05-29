@@ -8,8 +8,10 @@ matrix:
   include:
     - rvm: 1.9.3
       env: PUPPET_VERSION="~> 3.8.0"
-    - rvm: 2.4.0
+    - rvm: 2.1.9
+      env: PUPPET_VERSION="~> 4.10.0"
+    - rvm: 2.4.1
       env: PUPPET_VERSION="~> 5.3.0"
   allow_failures:
-    - rvm: 2.4.0
-      env: PUPPET_VERSION="~> 5.3.0"
+    - rvm: 1.9.3
+      env: PUPPET_VERSION="~> 3.8.0"
