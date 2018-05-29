@@ -3,9 +3,33 @@ require 'spec_helper'
 describe 'aptly::mirror' do
   let(:title) { 'example' }
   let(:facts) {{
-    :lsbdistid       => 'Debian',
-    :lsbdistcodename => 'precise',
-    :osfamily        => 'Debian',
+    lsbdistid: 'Debian',
+    lsbdistcodename: 'precise',
+    osfamily: 'Debian',
+    os: {
+      architecture: 'amd64',
+      distro: {
+        codename: 'stretch',
+        description: 'Debian GNU/Linux 9.4 (stretch)',
+        id: 'Debian',
+        release: {
+          full: '9.4',
+          major: '9',
+          minor: '4'
+        }
+      },
+      family: 'Debian',
+      hardware: 'x86_64',
+      name: 'Debian',
+      release: {
+        full: '9.4',
+        major: '9',
+        minor: '4'
+      },
+      selinux: {
+        enabled: false
+      }
+    }
   }}
 
   describe 'param defaults and mandatory' do

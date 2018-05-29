@@ -4,8 +4,32 @@ describe 'aptly::repo' do
   let(:title) { 'example' }
 
   let(:facts){{
-    :lsbdistid => 'ubuntu',
-    :osfamily  => 'Debian',
+    lsbdistid: 'ubuntu',
+    osfamily: 'Debian',
+    os: {
+      architecture: 'amd64',
+      distro: {
+        codename: 'stretch',
+        description: 'Debian GNU/Linux 9.4 (stretch)',
+        id: 'Debian',
+        release: {
+          full: '9.4',
+          major: '9',
+          minor: '4'
+        }
+      },
+      family: 'Debian',
+      hardware: 'x86_64',
+      name: 'Debian',
+      release: {
+        full: '9.4',
+        major: '9',
+        minor: '4'
+      },
+      selinux: {
+        enabled: false
+      }
+    }
   }}
 
   describe 'param defaults' do
@@ -78,7 +102,7 @@ describe 'aptly::repo' do
       }}
 
       it {
-        should raise_error(Puppet::Error, /is not an Array/)
+        should raise_error(Puppet::PreformattedError, /parameter 'architectures' expects an Array value, got String/)
       }
     end
   end

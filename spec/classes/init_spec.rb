@@ -1,10 +1,36 @@
 require 'spec_helper'
 
 describe 'aptly' do
-  let(:facts) {{
-    :lsbdistid => 'Debian',
-    :osfamily  => 'Debian',
-  }}
+  let(:facts) do
+    {
+      lsbdistid: 'Debian',
+      osfamily: 'Debian',
+      os: {
+        architecture: 'amd64',
+        distro: {
+          codename: 'stretch',
+          description: 'Debian GNU/Linux 9.4 (stretch)',
+          id: 'Debian',
+          release: {
+            full: '9.4',
+            major: '9',
+            minor: '4'
+          }
+        },
+        family: 'Debian',
+        hardware: 'x86_64',
+        name: 'Debian',
+        release: {
+          full: '9.4',
+          major: '9',
+          minor: '4'
+        },
+        selinux: {
+          enabled: false
+        }
+      }
+    }
+  end
 
   context 'param defaults' do
     let(:params) {{ }}
@@ -54,7 +80,7 @@ describe 'aptly' do
       }}
 
       it {
-        should raise_error(Puppet::Error, /is not an absolute path/)
+        should raise_error(Puppet::PreformattedError, /parameter 'config_file' expects a .*Stdlib::{Absolute|Windows|Unix}path/)
       }
     end
 
@@ -76,7 +102,7 @@ describe 'aptly' do
       }}
 
       it {
-        should raise_error(Puppet::Error, /is not a Hash/)
+        should raise_error(Puppet::PreformattedError, /parameter 'config' expects a Hash value, got String/)
       }
     end
 
@@ -103,7 +129,7 @@ EOS
          :config_contents => { 'a' => 1 }
       }}
       it {
-        should raise_error(Puppet::Error, /is not a string/)
+        should raise_error(Puppet::PreformattedError, /parameter 'config_contents' expects a value of type Undef or String, got Struct/)
       }
     end
 
@@ -125,7 +151,7 @@ EOS
       }}
 
       it {
-        should raise_error(Puppet::Error, /is not a boolean/)
+        should raise_error(Puppet::PreformattedError, /parameter 'repo' expects a Boolean value, got String/)
       }
     end
 

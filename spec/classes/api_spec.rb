@@ -4,8 +4,32 @@ describe 'aptly::api' do
   context 'Using Systemd' do
     let(:facts) do
       {
-        :operatingsystem => 'Debian',
-        :operatingsystemrelease => '8.7',
+        operatingsystem: 'Debian',
+        operatingsystemrelease: '8.7',
+        os: {
+          architecture: 'amd64',
+          distro: {
+            codename: 'stretch',
+            description: 'Debian GNU/Linux 9.4 (stretch)',
+            id: 'Debian',
+            release: {
+              full: '9.4',
+              major: '9',
+              minor: '4'
+            }
+          },
+          family: 'Debian',
+          hardware: 'x86_64',
+          name: 'Debian',
+          release: {
+            full: '9.4',
+            major: '9',
+            minor: '4'
+          },
+          selinux: {
+            enabled: false
+          }
+        }
       }
     end
 
@@ -144,6 +168,12 @@ describe 'aptly::api' do
       {
         :operatingsystem => 'Ubuntu',
         :operatingsystemrelease => '15.03',
+        os: {
+          name: 'Ubuntu',
+          release: {
+            full: '15.03'
+          }
+        }
       }
     end
 
