@@ -11,7 +11,7 @@
 # [*config_file*]
 #   Absolute path to the configuration file. Defaults to
 #   `/etc/aptly.conf`.
-#
+
 # [*config_contents*]
 #   Contents of the config file.
 #   Default: undef
@@ -69,13 +69,13 @@ class aptly (
 
   if $repo {
     apt::source { 'aptly':
-      location => 'http://repo.aptly.info',
-      release  => 'squeeze',
-      repos    => 'main',
-      key      => {
-        'server' => $key_server,
-        'id'     => '26DA9D8630302E0B86A7A2CBED75B5A4483DA07C',
-      },
+      location   => 'http://repo.aptly.info',
+      release    => 'squeeze',
+      repos      => 'main',
+      key        =>  {
+        key_server => $key_server,
+        id        => 'DF32BC15E2145B3FA151AED19E3E53F19C7DE460',
+      }
     }
 
     Apt::Source['aptly'] -> Class['apt::update'] -> Package['aptly']
