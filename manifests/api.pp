@@ -37,13 +37,13 @@ class aptly::api (
   $enable_cli_and_http = false,
   ) {
 
-  validate_re($ensure, ['^stopped|running$'], 'Valid values for $ensure: stopped, running')
+  validate_re($ensure, ['^(stopped|running)$'], 'Valid values for $ensure: stopped, running')
 
   validate_string($user, $group)
 
-  validate_re($listen, ['^[0-9.]*:[0-9]+$'], 'Valid values for $listen: :port, <ip>:<port>')
+  validate_re($listen, ['^([0-9.]*:[0-9]+$|unix:)'], 'Valid values for $listen: :port, <ip>:<port>, unix:///path')
 
-  validate_re($log, ['^none|log$'], 'Valid values for $log: none, log')
+  validate_re($log, ['^(none|log)$'], 'Valid values for $log: none, log')
 
   if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') < 0 {
     file { 'aptly-upstart':
