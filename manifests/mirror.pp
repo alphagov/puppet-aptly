@@ -58,30 +58,21 @@
 #   Example: ['http_proxy=http://127.0.0.2:3128']
 #   Default: []
 define aptly::mirror (
-  $location,
-  $key              = undef,
-  $keyserver        = 'keyserver.ubuntu.com',
-  $filter           = '',
-  $release          = $::lsbdistcodename,
-  $architectures    = [],
-  $repos            = [],
-  $with_sources     = false,
-  $with_udebs       = false,
-  $filter_with_deps = false,
-  $environment      = [],
+  String $location,
+  Hash $key                 = {},
+  String $keyring           = '/etc/apt/trusted.gpg',
+  String $filter            = '',
+  String $release           = $::lsbdistcodename,
+  Array $architectures      = [],
+  Array $repos              = [],
+  Boolean $with_sources     = false,
+  Boolean $with_udebs       = false,
+  Boolean $filter_with_deps = false,
+  Array $environment        = [],
 ) {
-  validate_string($keyserver)
-  validate_string($filter)
-  validate_array($repos)
-  validate_array($architectures)
-  validate_bool($filter_with_deps)
-  validate_bool($with_sources)
-  validate_bool($with_udebs)
-  validate_array($environment)
-
   include ::aptly
 
-  $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
+  $gpg_cmd = "/usr/bin/gpg --no-default-keyring --keyring ${keyring}"
   $aptly_cmd = "${::aptly::aptly_cmd} mirror"
 
   if empty($architectures) {
@@ -110,18 +101,25 @@ define aptly::mirror (
     $filter_with_deps_arg = ''
   }
 
-  if $key {
-    if is_array($key) {
-      $key_string = join($key, "' '")
-    } elsif is_string($key) or is_integer($key) {
-      $key_string = $key
+  if is_hash($key) and $key[id] and $key[server] {
+
+    if is_array($key[id]) {
+      $key_string = join($key[id], "' '")
+    } elsif is_string($key[id]) or is_integer($key[id]) {
+      $key_string = $key[id]
     } else {
       fail('$key is neither a string nor an array!')
     }
 
+    if $key[server] {
+      $key_server = $key[server]
+    }else{
+      $key_server = $::aptly::key_server
+    }
+
     exec { "aptly_mirror_gpg-${title}":
       path    => '/bin:/usr/bin',
-      command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key_string}'",
+      command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
       unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
       user    => $::aptly::user,
     }

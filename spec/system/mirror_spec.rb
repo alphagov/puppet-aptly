@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_system'
 
 describe 'mirror tests' do
@@ -15,18 +17,18 @@ describe 'mirror tests' do
     EOS
 
     puppet_apply(pp) do |r|
-      r.exit_code.should == 2
+      r.exit_code.should eq 2
       r.refresh
       r.exit_code.should be_zero
     end
   end
 
-  it 'should have installed aptly' do
+  it 'has installed aptly' do
     shell 'aptly mirror show puppetlabs' do |r|
-      r.stdout.should =~ /^Name: puppetlabs
+      r.stdout.should =~ %r{^Name: puppetlabs
 Archive Root URL: http:\/\/apt\.puppetlabs\.com\/
 Distribution: precise
-Components: main, dependencies$/
+Components: main, dependencies$}
       r.stderr.should be_empty
       r.exit_code.should be_zero
     end

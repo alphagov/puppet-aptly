@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec-system/spec_helper'
 require 'rspec-system-puppet/helpers'
 
@@ -10,7 +12,7 @@ RSpec.configure do |c|
 
   c.before :suite do
     puppet_install
-    puppet_module_install(:source => proj_root, :module_name => 'aptly')
+    puppet_module_install(source: proj_root, module_name: 'aptly')
     shell('puppet module install puppetlabs-stdlib')
     shell('puppet module install puppetlabs-apt --version 2.2.0')
   end

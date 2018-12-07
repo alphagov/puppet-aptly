@@ -1,5 +1,4 @@
-# aptly
-
+# aptly 
 Puppet module for [aptly](http://www.aptly.info/).
 
 ## Example usage
