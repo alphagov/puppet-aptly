@@ -14,13 +14,9 @@
 #   URL of the APT repo.
 #
 # [*key*]
-#   Import the GPG key into the `trustedkeys` keyring so that aptly can
-#   verify the mirror's manifests. May be specified as string or array for
-#   multiple keys. If not specified, no action will be taken.
-#
-# [*keyserver*]
-#   The keyserver to use when download the key
-#   Default: 'keyserver.ubuntu.com'
+#   Hash with GPG key(s), see apt module for example. Will use keyserver
+#   from init.pp as default.
+#   Default: {}
 #
 # [*filter*]
 #   Package query that is applied to packages in the mirror
@@ -101,7 +97,7 @@ define aptly::mirror (
     $filter_with_deps_arg = ''
   }
 
-  if is_hash($key) and $key[id] and $key[server] {
+  if is_hash($key) and $key[id] {
 
     if is_array($key[id]) {
       $key_string = join($key[id], "' '")
