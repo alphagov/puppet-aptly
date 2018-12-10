@@ -61,8 +61,8 @@ describe 'aptly::mirror' do
 
       it {
         is_expected.to contain_exec('aptly_mirror_gpg-example').with(command: %r{ --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$},
-                                                                           unless: %r{^echo 'ABC123' |},
-                                                                           user: 'root')
+                                                                     unless: %r{^echo 'ABC123' |},
+                                                                     user: 'root')
       }
 
       it {
