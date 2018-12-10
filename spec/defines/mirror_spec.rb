@@ -49,16 +49,32 @@ describe 'aptly::mirror' do
     }
 
     context 'two repos with same key' do
-      let(:pre_condition) do
-        <<-EOS
-        aptly::mirror { 'example-lucid':
-          location => 'http://lucid.example.com/',
-          key      => {id: 'ABC123', server: 'keyserver.ubuntu.com'}
+      let(:params) do
+        {
+          location: 'http://lucid.example.com',
+          key: {
+            id: 'ABC123',
+            server: 'keyserver.ubuntu.com'
+          }
         }
-        EOS
       end
 
-      it { is_expected.to contain_exec('aptly_mirror_gpg-example-lucid') }
+      it {
+        is_expected.to contain_exec('aptly_mirror_gpg-example').with(command: %r{ --keyserver 'keyserver.ubuntu.com' --recv-keys 'ABC123'$},
+                                                                           unless: %r{^echo 'ABC123' |},
+                                                                           user: 'root')
+      }
+
+      it {
+        is_expected.to contain_exec('aptly_mirror_create-example').with(command: %r{aptly -config \/etc\/aptly.conf mirror create *-with-sources=false -with-udebs=false example http:\/\/lucid\.example\.com precise$},
+                                                                        unless: %r{aptly -config \/etc\/aptly.conf mirror show example >\/dev\/null$},
+                                                                        user: 'root',
+                                                                        require: [
+                                                                          'Package[aptly]',
+                                                                          'File[/etc/aptly.conf]',
+                                                                          'Exec[aptly_mirror_gpg-example]'
+                                                                        ])
+      }
     end
   end
 
