@@ -1,3 +1,9 @@
+2019-01-?? Release 0.9.?
+- Convertion to PDK
+- Update Aptly repositories keys
+- More validation
+- Support of the [puppetlabs/apt](https://forge.puppet.com/puppetlabs/apt) module (version 2.0+) format of keys
+
 2017-08-11 Release 0.9.0
 - Add support for running on systemd based systems. Thanks to @zipkid for the code *and* tests!
 

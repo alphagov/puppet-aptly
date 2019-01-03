@@ -22,6 +22,17 @@ aptly::mirror { 'puppetlabs':
   key      => '4BD6EC30',
 }
 ```
+or with the [puppetlabs/apt](https://forge.puppet.com/puppetlabs/apt)  module 2.0+ format
+```puppet
+aptly::mirror { 'puppetlabs':
+  location => 'http://apt.puppetlabs.com/',
+  repos    => ['main', 'dependencies'],
+  key      =>  {
+    server => 'keyserver.ubuntu.com',
+    id     => '4BD6EC30',
+  }
+}
+```
 
 Create an aptly repository to host local packages:
 ```puppet

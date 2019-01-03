@@ -9,7 +9,7 @@ cache:
 
 before_script:
   - bundle -v
-  - rm Gemfile.lock || true
+  - rm -f Gemfile.lock || true
   - gem update --system
   - gem --version
   - bundle -v
