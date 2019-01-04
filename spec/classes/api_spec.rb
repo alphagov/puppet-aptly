@@ -78,7 +78,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{Valid values for \$ensure: stopped, running}) }
+        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
       end
     end
 
@@ -166,7 +166,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{Valid values for \$log: none, log}) }
+        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
       end
     end
 
@@ -245,7 +245,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{Valid values for \$ensure: stopped, running}) }
+        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
       end
     end
 
@@ -349,7 +349,7 @@ describe 'aptly::api' do
           }
         end
 
-        it { is_expected.to raise_error(Puppet::Error, %r{Valid values for \$log: none, log}) }
+        it { is_expected.to raise_error(Puppet::Error, %r{expects a}) }
       end
     end
 
