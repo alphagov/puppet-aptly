@@ -112,6 +112,7 @@ define aptly::mirror (
     }else{
       $key_server = $::aptly::key_server
     }
+
   # key in string/array format
   }elsif is_string($key) or is_array($key) {
     $key_server = $::aptly::key_server
@@ -122,24 +123,26 @@ define aptly::mirror (
     } else {
       fail('$key is neither a string nor an array!')
     }
-
-  exec { "aptly_mirror_gpg-${title}":
-    path    => '/bin:/usr/bin',
-    command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
-    unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
-    user    => $::aptly::user,
   }
 
-  $exec_aptly_mirror_create_require = [
-    Package['aptly'],
-    File['/etc/aptly.conf'],
-    Exec["aptly_mirror_gpg-${title}"],
-  ]
-
-  } else {
+  # no GPG key
+  if $key.empty {
     $exec_aptly_mirror_create_require = [
       Package['aptly'],
       File['/etc/aptly.conf'],
+    ]
+  }else{
+    exec { "aptly_mirror_gpg-${title}":
+      path    => '/bin:/usr/bin',
+      command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
+      unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
+      user    => $::aptly::user,
+    }
+
+    $exec_aptly_mirror_create_require = [
+      Package['aptly'],
+      File['/etc/aptly.conf'],
+      Exec["aptly_mirror_gpg-${title}"],
     ]
   }
 
