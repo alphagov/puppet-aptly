@@ -1,8 +1,10 @@
-2019-01-?? Release 0.9.?
+2019-01-28 Release 1.0.0
 - Convertion to PDK
 - Update Aptly repositories keys
 - More validation
-- Support of the [puppetlabs/apt](https://forge.puppet.com/puppetlabs/apt) module (version 2.0+) format of keys
+- Support of the [puppetlabs/apt](https://forge.puppet.com/puppetlabs/apt) module (version 2.0+) format of keys:
+  - `aptly::mirror::keyserver` has been removed
+  - `aptly::mirror::key` is now a string containing the key id or a hash (see example in [Readme](Readme.md))
 
 2017-08-11 Release 0.9.0
 - Add support for running on systemd based systems. Thanks to @zipkid for the code *and* tests!
