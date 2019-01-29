@@ -14,13 +14,9 @@
 #   URL of the APT repo.
 #
 # [*key*]
-#   Import the GPG key into the `trustedkeys` keyring so that aptly can
-#   verify the mirror's manifests. May be specified as string or array for
-#   multiple keys. If not specified, no action will be taken.
-#
-# [*keyserver*]
-#   The keyserver to use when download the key
-#   Default: 'keyserver.ubuntu.com'
+#   This can either be a key id or a hash including key options. 
+#   If using a hash, key => { 'id' => <id> } must be specified
+#   Default: {}
 #
 # [*filter*]
 #   Package query that is applied to packages in the mirror
@@ -58,30 +54,21 @@
 #   Example: ['http_proxy=http://127.0.0.2:3128']
 #   Default: []
 define aptly::mirror (
-  $location,
-  $key              = undef,
-  $keyserver        = 'keyserver.ubuntu.com',
-  $filter           = '',
-  $release          = $::lsbdistcodename,
-  $architectures    = [],
-  $repos            = [],
-  $with_sources     = false,
-  $with_udebs       = false,
-  $filter_with_deps = false,
-  $environment      = [],
+  String $location,
+  Variant[String, Hash] $key = {},
+  String $keyring            = '/etc/apt/trusted.gpg',
+  String $filter             = '',
+  String $release            = $::lsbdistcodename,
+  Array $architectures       = [],
+  Array $repos               = [],
+  Boolean $with_sources      = false,
+  Boolean $with_udebs        = false,
+  Boolean $filter_with_deps  = false,
+  Array $environment         = [],
 ) {
-  validate_string($keyserver)
-  validate_string($filter)
-  validate_array($repos)
-  validate_array($architectures)
-  validate_bool($filter_with_deps)
-  validate_bool($with_sources)
-  validate_bool($with_udebs)
-  validate_array($environment)
-
   include ::aptly
 
-  $gpg_cmd = '/usr/bin/gpg --no-default-keyring --keyring trustedkeys.gpg'
+  $gpg_cmd = "/usr/bin/gpg --no-default-keyring --keyring ${keyring}"
   $aptly_cmd = "${::aptly::aptly_cmd} mirror"
 
   if empty($architectures) {
@@ -110,7 +97,25 @@ define aptly::mirror (
     $filter_with_deps_arg = ''
   }
 
-  if $key {
+  # $::aptly::key_server will be used as default key server
+  # key in hash format
+  if is_hash($key) and $key[id] {
+    if is_array($key[id]) {
+      $key_string = join($key[id], "' '")
+    } elsif is_string($key[id]) or is_integer($key[id]) {
+      $key_string = $key[id]
+    } else {
+      fail('$key[id] is neither a string nor an array!')
+    }
+    if $key[server] {
+      $key_server = $key[server]
+    }else{
+      $key_server = $::aptly::key_server
+    }
+
+  # key in string/array format
+  }elsif is_string($key) or is_array($key) {
+    $key_server = $::aptly::key_server
     if is_array($key) {
       $key_string = join($key, "' '")
     } elsif is_string($key) or is_integer($key) {
@@ -118,10 +123,18 @@ define aptly::mirror (
     } else {
       fail('$key is neither a string nor an array!')
     }
+  }
 
+  # no GPG key
+  if $key.empty {
+    $exec_aptly_mirror_create_require = [
+      Package['aptly'],
+      File['/etc/aptly.conf'],
+    ]
+  }else{
     exec { "aptly_mirror_gpg-${title}":
       path    => '/bin:/usr/bin',
-      command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key_string}'",
+      command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
       unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
       user    => $::aptly::user,
     }
@@ -130,11 +143,6 @@ define aptly::mirror (
       Package['aptly'],
       File['/etc/aptly.conf'],
       Exec["aptly_mirror_gpg-${title}"],
-    ]
-  } else {
-    $exec_aptly_mirror_create_require = [
-      Package['aptly'],
-      File['/etc/aptly.conf'],
     ]
   }
 

@@ -29,21 +29,15 @@
 #   the same Aptly root.
 #
 class aptly::api (
-  $ensure              = running,
-  $user                = 'root',
-  $group               = 'root',
-  $listen              = ':8080',
-  $log                 = 'none',
-  $enable_cli_and_http = false,
+  Enum['stopped','running'] $ensure = running,
+  $user                             = 'root',
+  $group                            = 'root',
+  $listen                           = ':8080',
+  Enum['none','log'] $log           = 'none',
+  Boolean $enable_cli_and_http      = false,
   ) {
-
-  validate_re($ensure, ['^stopped|running$'], 'Valid values for $ensure: stopped, running')
-
   validate_string($user, $group)
-
-  validate_re($listen, ['^[0-9.]*:[0-9]+$'], 'Valid values for $listen: :port, <ip>:<port>')
-
-  validate_re($log, ['^none|log$'], 'Valid values for $log: none, log')
+  validate_re($listen, ['^([0-9.]*:[0-9]+$|unix:)'], 'Valid values for $listen: :port, <ip>:<port>, unix:///path')
 
   if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') < 0 {
     file { 'aptly-upstart':
