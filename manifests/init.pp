@@ -79,6 +79,7 @@ class aptly (
   file { $config_file:
     ensure  => file,
     content => $config_file_contents,
+    alias   => 'aptly_config_file',
   }
 
   $aptly_cmd = "/usr/bin/aptly -config ${config_file}"

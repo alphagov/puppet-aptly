@@ -61,7 +61,7 @@ define aptly::repo(
     user    => $::aptly::user,
     require => [
       Package['aptly'],
-      File['/etc/aptly.conf'],
+      File['aptly_config_file'],
     ],
   }
 }

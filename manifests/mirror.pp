@@ -129,7 +129,7 @@ define aptly::mirror (
   if $key.empty {
     $exec_aptly_mirror_create_require = [
       Package['aptly'],
-      File['/etc/aptly.conf'],
+      File['aptly_config_file'],
     ]
   }else{
     exec { "aptly_mirror_gpg-${title}":
@@ -141,7 +141,7 @@ define aptly::mirror (
 
     $exec_aptly_mirror_create_require = [
       Package['aptly'],
-      File['/etc/aptly.conf'],
+      File['aptly_config_file'],
       Exec["aptly_mirror_gpg-${title}"],
     ]
   }

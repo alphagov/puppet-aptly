@@ -41,7 +41,7 @@ describe 'aptly::repo' do
       is_expected.to contain_exec('aptly_repo_create-example').with(command: %r{aptly -config \/etc\/aptly.conf repo create *example},
                                                                     unless: %r{aptly -config \/etc\/aptly.conf repo show example >\/dev\/null},
                                                                     user: 'root',
-                                                                    require: ['Package[aptly]', 'File[/etc/aptly.conf]'])
+                                                                    require: ['Package[aptly]', 'File[aptly_config_file]'])
     }
   end
 
@@ -56,7 +56,7 @@ describe 'aptly::repo' do
       is_expected.to contain_exec('aptly_repo_create-example').with(command: %r{aptly -config \/etc\/aptly.conf repo create *-component="third-party" *example},
                                                                     unless: %r{aptly -config \/etc\/aptly.conf repo show example >\/dev\/null},
                                                                     user: 'root',
-                                                                    require: ['Package[aptly]', 'File[/etc/aptly.conf]'])
+                                                                    require: ['Package[aptly]', 'File[aptly_config_file]'])
     }
 
     context 'custom user' do
@@ -78,7 +78,7 @@ describe 'aptly::repo' do
         is_expected.to contain_exec('aptly_repo_create-example').with(command: %r{aptly -config \/etc\/aptly.conf repo create *-component="third-party" *example},
                                                                       unless: %r{aptly -config \/etc\/aptly.conf repo show example >\/dev\/null},
                                                                       user: 'custom_user',
-                                                                      require: ['Package[aptly]', 'File[/etc/aptly.conf]'])
+                                                                      require: ['Package[aptly]', 'File[aptly_config_file]'])
       }
     end
   end
@@ -95,7 +95,7 @@ describe 'aptly::repo' do
         is_expected.to contain_exec('aptly_repo_create-example').with(command: %r{aptly -config \/etc\/aptly.conf repo create *-architectures="i386,amd64" *example},
                                                                       unless: %r{aptly -config \/etc\/aptly.conf repo show example >\/dev\/null},
                                                                       user: 'root',
-                                                                      require: ['Package[aptly]', 'File[/etc/aptly.conf]'])
+                                                                      require: ['Package[aptly]', 'File[aptly_config_file]'])
       }
     end
 
@@ -123,7 +123,7 @@ describe 'aptly::repo' do
       is_expected.to contain_exec('aptly_repo_create-example').with(command: %r{aptly -config \/etc\/aptly.conf repo create *-comment="example comment" *example},
                                                                     unless: %r{aptly -config \/etc\/aptly.conf repo show example >\/dev\/null},
                                                                     user: 'root',
-                                                                    require: ['Package[aptly]', 'File[/etc/aptly.conf]'])
+                                                                    require: ['Package[aptly]', 'File[aptly_config_file]'])
     }
   end
 
@@ -138,7 +138,7 @@ describe 'aptly::repo' do
       is_expected.to contain_exec('aptly_repo_create-example').with(command: %r{aptly -config \/etc\/aptly.conf repo create *-distribution="example_distribution" *example},
                                                                     unless: %r{aptly -config \/etc\/aptly.conf repo show example >\/dev\/null},
                                                                     user: 'root',
-                                                                    require: ['Package[aptly]', 'File[/etc/aptly.conf]'])
+                                                                    require: ['Package[aptly]', 'File[aptly_config_file]'])
     }
   end
 end
