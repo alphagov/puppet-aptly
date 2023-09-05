@@ -99,7 +99,7 @@ define aptly::mirror (
 
   # $::aptly::key_server will be used as default key server
   # key in hash format
-  if is_hash($key) and $key[id] {
+  if $key =~ Hash and $key[id] {
     if is_array($key[id]) {
       $key_string = join($key[id], "' '")
     } elsif is_string($key[id]) or is_integer($key[id]) {
