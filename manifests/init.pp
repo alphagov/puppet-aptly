@@ -72,7 +72,7 @@ class aptly (
   }
 
   $config_file_contents = $config_contents ? {
-    undef   => $config.stdlib::to_json,
+    undef   => $config.stdlib::to_json_pretty,
     default => $config_contents,
   }
 
