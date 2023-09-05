@@ -55,7 +55,7 @@
 #   Default: []
 define aptly::mirror (
   String $location,
-  Variant[String[1], Hash[String[1],Variant[Integer[1],String[1]]]] $key = {},
+  Variant[String[1], Hash[String[1],Variant[Array,Integer[1],String[1]]]] $key = {},
   String $keyring            = '/etc/apt/trusted.gpg',
   String $filter             = '',
   String $release            = $::lsbdistcodename,
@@ -75,7 +75,7 @@ define aptly::mirror (
     $architectures_arg = ''
   } else{
     $architectures_as_s = join($architectures, ',')
-    $architectures_arg = "-architectures=\"${architectures_as_s}\""
+    $architectures_arg = "-architectures='${architectures_as_s}'"
   }
 
   if empty($repos) {
