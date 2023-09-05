@@ -55,7 +55,7 @@
 #   Default: []
 define aptly::mirror (
   String $location,
-  Variant[String, Hash] $key = {},
+  Variant[String[1], Hash[String[1],Variant[Integer[1],String[1]]]] $key = {},
   String $keyring            = '/etc/apt/trusted.gpg',
   String $filter             = '',
   String $release            = $::lsbdistcodename,
@@ -100,12 +100,10 @@ define aptly::mirror (
   # $::aptly::key_server will be used as default key server
   # key in hash format
   if $key =~ Hash and $key[id] {
-    if is_array($key[id]) {
+    if $key[id] =~ Array {
       $key_string = join($key[id], "' '")
-    } elsif is_string($key[id]) or is_integer($key[id]) {
-      $key_string = $key[id]
     } else {
-      fail('$key[id] is neither a string nor an array!')
+      $key_string = $key[id]
     }
     if $key[server] {
       $key_server = $key[server]
@@ -114,15 +112,9 @@ define aptly::mirror (
     }
 
   # key in string/array format
-  }elsif is_string($key) or is_array($key) {
+  } elsif $key =~ String {
     $key_server = $::aptly::key_server
-    if is_array($key) {
-      $key_string = join($key, "' '")
-    } elsif is_string($key) or is_integer($key) {
-      $key_string = $key
-    } else {
-      fail('$key is neither a string nor an array!')
-    }
+    $key_string = $key
   }
 
   # no GPG key
